@@ -1,3 +1,7 @@
 export default function Home() {
-  return <div>Login Successful</div>;
+  return (
+    <div>
+      <div>Login Successful</div>
+    </div>
+  );
 }

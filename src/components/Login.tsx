@@ -27,10 +27,16 @@ export default function Login() {
   const submitHandler = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await axios.post<User>("/users/login", {
-        email,
-        password,
-      });
+      const response = await axios.post<User>(
+        "/users/login",
+        {
+          email,
+          password,
+        },
+        {
+          withCredentials: true,
+        },
+      );
       const accessToken = response?.data?.accessToken;
       const firstname = response?.data?.firstname;
       localStorage.setItem("accessToken", accessToken);
