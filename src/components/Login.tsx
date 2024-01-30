@@ -35,7 +35,7 @@ export default function Login() {
         },
         {
           withCredentials: true,
-        },
+        }
       );
       const accessToken = response?.data?.accessToken;
       const firstname = response?.data?.firstname;
