@@ -106,8 +106,16 @@ export default function Login() {
                 onChange={(e) => handlePasswordChange(e.target.value)}
                 required
               />
+              {!isValidPassword && (
+                <span className="text-red-500 text-sm">
+                  Password should be atleast 6 characters
+                </span>
+              )}
             </div>
-            <Button className="my-3 p-5 drop-shadow-md shadow-slate-950">
+            <Button
+              className="my-3 p-5 drop-shadow-md shadow-slate-950"
+              disabled={!isValidPassword}
+            >
               Log In
             </Button>
           </form>

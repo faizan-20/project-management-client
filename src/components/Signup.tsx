@@ -15,6 +15,7 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordsMatch, setPasswordsMatch] = useState(true);
+  const [isValidPassword, setIsValidPassword] = useState(true);
 
   const { setUser } = useContext(AuthContext);
 
@@ -28,10 +29,23 @@ export default function Signup() {
 
   const handlePasswordChange = (value: string) => {
     setConfirmPassword(value);
-    if (password !== value) {
+    if (value.length === 0) {
+      setPasswordsMatch(true);
+    } else if (password !== value) {
       setPasswordsMatch(false);
     } else {
       setPasswordsMatch(true);
+    }
+  };
+
+  const handleValidPassword = (value: string) => {
+    setPassword(value);
+    if (value.length === 0) {
+      setIsValidPassword(true);
+    } else if (value.length < 6) {
+      setIsValidPassword(false);
+    } else {
+      setIsValidPassword(true);
     }
   };
 
@@ -41,11 +55,11 @@ export default function Signup() {
       const response = await axios.post<User>(
         "/users/signup",
         {
-          firstname : firstName,
-          lastname : lastName,
+          firstname: firstName,
+          lastname: lastName,
           email,
-          password1 : password,
-          password2 : confirmPassword,
+          password1: password,
+          password2: confirmPassword,
         },
         {
           withCredentials: true,
@@ -79,38 +93,38 @@ export default function Signup() {
       <div className="flex-1 bg-hero flex justify-center items-center sm:bg-none bg-hero-image2">
         <div className="lg:flex-[0.45] md:flex-[0.7]">
           <div className="text-3xl mb-10">Sign Up</div>
-          <form className="flex flex-col gap-5" onSubmit={submitHandler}> 
-          <div className = "gap-2 flex md:flex-row flex-col"> 
-          <div> 
-              <Label htmlFor="firstname" className="text-slate-600 font-bold">
-                First Name <span className="text-red-600">*</span>
-              </Label>
-              <Input
-                name="firtname"
-                id="firstname"
-                placeholder="Enter FirstName"
-                type="text"
-                className="py-5 px-2 text-md border-slate-400 border-2 focus:border-slate-600"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                required
-              />
+          <form className="flex flex-col gap-2" onSubmit={submitHandler}>
+            <div className="gap-2 flex md:flex-row flex-col">
+              <div>
+                <Label htmlFor="firstname" className="text-slate-600 font-bold">
+                  First Name <span className="text-red-600">*</span>
+                </Label>
+                <Input
+                  name="firtname"
+                  id="firstname"
+                  placeholder="Enter FirstName"
+                  type="text"
+                  className="py-5 px-2 text-md border-slate-400 border-2 focus:border-slate-600"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="lastname" className="text-slate-600 font-bold">
+                  Last Name
+                </Label>
+                <Input
+                  name="lastname"
+                  id="lastname"
+                  placeholder="Enter LastName"
+                  type="text"
+                  className="py-5 px-2 text-md border-slate-400 border-2 focus:border-slate-600"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+              </div>
             </div>
-            <div>
-              <Label htmlFor="lastname" className="text-slate-600 font-bold">
-                Last Name
-              </Label>
-              <Input
-                name="lastname"
-                id="lastname"
-                placeholder="Enter LastName"
-                type="text"
-                className="py-5 px-2 text-md border-slate-400 border-2 focus:border-slate-600"
-                value = {lastName}
-                onChange={(e) => setLastName(e.target.value)}
-              />
-            </div>
-          </div>
             <div className="flex flex-col">
               <Label htmlFor="email" className="text-slate-600 font-bold">
                 Email <span className="text-red-600">*</span>
@@ -127,10 +141,7 @@ export default function Signup() {
               />
             </div>
             <div className="flex flex-col">
-              <Label
-                htmlFor="password1"
-                className="text-slate-600 font-bold"
-              >
+              <Label htmlFor="password1" className="text-slate-600 font-bold">
                 Password <span className="text-red-600">*</span>
               </Label>
               <Input
@@ -138,17 +149,19 @@ export default function Signup() {
                 id="password1"
                 placeholder="Enter Password"
                 type="password"
-                className="py-5 px-2 text-md border-slate-400 border-2 focus:border-slate-600"
+                className={`py-5 px-2 text-md border-2 ${isValidPassword ? "border-slate-400" : "border-red-400"} focus:border-${isValidPassword ? "slate-600" : "red-600"}`}
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => handleValidPassword(e.target.value)}
                 required
               />
+              {!isValidPassword && (
+                <span className="text-red-500 text-sm">
+                  Password should be atleast 6 characters
+                </span>
+              )}
             </div>
             <div className="flex flex-col">
-              <Label
-                htmlFor="password2"
-                className="text-slate-600 font-bold"
-              >
+              <Label htmlFor="password2" className="text-slate-600 font-bold">
                 Confirm Password <span className="text-red-600">*</span>
               </Label>
               <Input
@@ -156,7 +169,7 @@ export default function Signup() {
                 id="password2"
                 placeholder="Enter Password"
                 type="password"
-                className={`py-5 px-2 text-md border-2 ${passwordsMatch ? 'border-slate-400' : 'border-red-400'} focus:border-${passwordsMatch ? 'slate-600' : 'red-600'}`}
+                className={`py-5 px-2 text-md border-2 ${passwordsMatch ? "border-slate-400" : "border-red-400"} focus:border-${passwordsMatch ? "slate-600" : "red-600"}`}
                 value={confirmPassword}
                 onChange={(e) => {
                   handlePasswordChange(e.target.value);
@@ -164,10 +177,15 @@ export default function Signup() {
                 required
               />
               {!passwordsMatch && (
-                <span className="text-red-500 text-sm">Passwords do not match</span>
+                <span className="text-red-500 text-sm">
+                  Passwords do not match
+                </span>
               )}
             </div>
-            <Button className="my-3 p-5 drop-shadow-md shadow-slate-950">
+            <Button
+              className="my-3 p-5 drop-shadow-md shadow-slate-950"
+              disabled={!isValidPassword || !passwordsMatch}
+            >
               Sign Up
             </Button>
           </form>
