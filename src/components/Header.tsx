@@ -57,7 +57,7 @@ export default function Header() {
         </div>
       </div>
       <div className="flex gap-4 items-center">
-        <div className="text-base text-slate-800 hover:cursor-pointer hover:bg-slate-300 px-2 py-1 transition-all rounded-sm">
+        <div className="text-base text-slate-600 hover:cursor-pointer hover:bg-slate-300 px-2 py-1 transition-all rounded-sm">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -80,7 +80,7 @@ export default function Header() {
                 alt={`${user.firstname}'s Avatar`}
               />
               <AvatarFallback className="rounded-full">
-                {user.firstname[0].toUpperCase()}
+                {user.firstname[0]}
               </AvatarFallback>
             </Avatar>
           </div>
