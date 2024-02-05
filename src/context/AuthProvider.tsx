@@ -10,6 +10,7 @@ export type User = {
   firstname: string;
   email: string;
   accessToken: string;
+  avatar?: string;
 };
 
 export interface AuthContextInterface {
