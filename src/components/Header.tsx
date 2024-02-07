@@ -8,7 +8,7 @@ export default function Header() {
   return (
     <div className="flex justify-between items-center px-6 h-12 border-b-2 border-slate-200">
       <div className="flex gap-4 items-center">
-        <div className="flex mr-6 gap-2 items-center hover:cursor-pointer hover:bg-slate-300 px-2 py-1 transition-all rounded-sm">
+        <div className="flex mr-6 gap-2 items-center hover:cursor-pointer hover:bg-slate-300 px-2 py-1 transition-all rounded-sm select-none">
           <div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -21,7 +21,7 @@ export default function Header() {
           </div>
           <div className="text-lg font-semibold "> KiraSoftware</div>
         </div>
-        <div className="text-base text-slate-800 flex items-center gap-1 hover:cursor-pointer hover:bg-slate-300 px-2 py-1 transition-all rounded-sm">
+        <div className="text-base text-slate-800 flex items-center gap-1 hover:cursor-pointer hover:bg-slate-300 px-2 py-1 transition-all rounded-sm select-none">
           <div>Your Work</div>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -38,7 +38,7 @@ export default function Header() {
             />
           </svg>
         </div>
-        <div className="text-base text-slate-800 flex items-center gap-1 hover:cursor-pointer hover:bg-slate-300 px-2 py-1 transition-all rounded-sm">
+        <div className="text-base text-slate-800 flex items-center gap-1 hover:cursor-pointer hover:bg-slate-300 px-2 py-1 transition-all rounded-sm select-none">
           <div>Projects</div>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -57,7 +57,7 @@ export default function Header() {
         </div>
       </div>
       <div className="flex gap-4 items-center">
-        <div className="text-base text-slate-600 hover:cursor-pointer hover:bg-slate-300 px-2 py-1 transition-all rounded-sm">
+        <div className="text-base text-slate-600 flex items-center gap-1 hover:cursor-pointer hover:bg-slate-300 px-2 py-1 transition-all rounded-sm">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -71,7 +71,7 @@ export default function Header() {
             />
           </svg>
         </div>
-        <div className="text-base text-slate-800 hover:cursor-pointer hover:bg-slate-300 px-2 py-1 transition-all rounded-sm">
+        <div className="text-base text-slate-600 hover:cursor-pointer hover:bg-slate-300 px-2 py-1 transition-all rounded-sm">
           <div className="w-6 h-6">
             <Avatar>
               <AvatarImage
@@ -80,7 +80,9 @@ export default function Header() {
                 alt={`${user.firstname}'s Avatar`}
               />
               <AvatarFallback className="rounded-full">
-                {user.firstname[0]}
+                {user.firstname && user.firstname.length > 0
+                  ? user.firstname[0].toLowerCase()
+                  : ""}
               </AvatarFallback>
             </Avatar>
           </div>
