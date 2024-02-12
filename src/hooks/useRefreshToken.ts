@@ -6,7 +6,9 @@ const useRefreshToken = () => {
   const { setUser } = useContext(AuthContext);
 
   const refresh = async () => {
-    const response = await axios.get("/users/refresh");
+    const response = await axios.get("/users/refresh", {
+      withCredentials: true,
+    });
 
     setUser((prev) => {
       return { ...prev, accessToken: response.data.accessToken };
