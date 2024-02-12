@@ -1,6 +1,11 @@
 import { Link } from "react-router-dom";
+import { ProjectType } from "./Home";
 
-function ProjectRow() {
+type ProjectRowProps = {
+  project: ProjectType;
+};
+
+function ProjectRow({ project }: ProjectRowProps) {
   return (
     <tr>
       <td className="text-center">
@@ -20,13 +25,13 @@ function ProjectRow() {
         </svg>
       </td>
       <td className="text-blue-800 hover:underline min-w-[6vw] max-w-[6vw] hover:cursor-pointer">
-        My Projects
+        {project.title}
       </td>
-      <td className="min-w-[5vw]">MPER</td>
+      <td className="min-w-[5vw]">{project.key}</td>
       <td className="max-w-[7vw]">Team-managed Software</td>
       <td className="text-blue-800 max-w-[6vw]">
         <Link to="#" className="hover:underline">
-          Faizan Ahmad
+          {project.owner.firstname}
         </Link>
       </td>
       <td className="flex justify-end">
