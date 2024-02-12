@@ -13,6 +13,7 @@ export type ProjectType = {
   admins: User[];
   users: User[];
   updatedby?: User;
+  _id: string;
 };
 
 type ProjectResponseType = {
@@ -75,7 +76,7 @@ export default function Home() {
               <th className="text-right">More actions</th>
             </tr>
             {projects.map((project) => (
-              <ProjectRow project={project} />
+              <ProjectRow key={project._id} project={project} />
             ))}
           </tbody>
         </table>
