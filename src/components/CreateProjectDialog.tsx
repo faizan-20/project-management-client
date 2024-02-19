@@ -18,16 +18,48 @@ import { Button } from "./ui/button";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "./ui/input";
 import { useState } from "react";
+import { ProjectType } from "./Home";
+import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 
-export function CreateProjectDialog() {
+type ProjectResponse = {
+  project: ProjectType;
+};
+
+type CreateProjectDialogProps = {
+  setProjects: React.Dispatch<React.SetStateAction<ProjectType[] | undefined>>;
+}
+
+export function CreateProjectDialog({setProjects} : CreateProjectDialogProps) {
   const [title, setTitle] = useState("")
   const [key, setKey] = useState("")
   const [template, setTemplate] = useState("")
   const [type, setType] = useState("")
 
-  const submitHandler = async (e: React.ChangeEvent<HTMLFormElement>) => {
+  const axiosPrivate = useAxiosPrivate();
+
+  const submitHandler = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     e.preventDefault();
-  }
+    try {
+      const { data } = await axiosPrivate.post<ProjectResponse>(
+        "/projects/create-project",
+        {
+          title,
+          key,
+        }
+      );
+      setProjects((prevArray) => {
+        if (prevArray) {
+          return [...prevArray, data.project];
+        } else {
+          return [data.project];
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Dialog>
@@ -39,7 +71,7 @@ export function CreateProjectDialog() {
           <DialogTitle >Create Project</DialogTitle>
         </DialogHeader>
 
-        <form className="flex flex-col" onSubmit={submitHandler}>
+        <form className="flex flex-col">
           
           <div className="flex flex-col pb-2">
             <Label htmlFor="project-title" className="text-slate-600 pb-1 font-bold">
@@ -104,7 +136,7 @@ export function CreateProjectDialog() {
                 id="project-type"
                 name="project-type"
                 value={type}
-                // onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setType(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setType(e.target.value)}
                 className="px-2 text-md border-slate-400 border-2 focus:border-slate-600"
               >
                 <SelectValue placeholder="Select a type" />
@@ -121,7 +153,7 @@ export function CreateProjectDialog() {
         </form>
 
         <DialogFooter>
-          <Button type="submit">Create Project</Button>
+          <Button type="submit" onClick={submitHandler}>Create Project</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
