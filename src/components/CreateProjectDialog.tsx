@@ -26,7 +26,7 @@ type ProjectResponse = {
 };
 
 type CreateProjectDialogProps = {
-  setProjects: React.Dispatch<React.SetStateAction<ProjectType[] | undefined>>;
+  setProjects: React.Dispatch<React.SetStateAction<ProjectType[]>>;
 };
 
 export function CreateProjectDialog({ setProjects }: CreateProjectDialogProps) {

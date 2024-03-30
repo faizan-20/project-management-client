@@ -13,6 +13,7 @@ import Signup from "./components/Signup.tsx";
 import { Toaster } from "./components/ui/toaster.tsx";
 import AuthProvider from "./context/AuthProvider.tsx";
 import Layout from "./Layout.tsx";
+import ProjectsProvider from "./context/ProjectsProvider.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -29,7 +30,9 @@ const router = createBrowserRouter(
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <AuthProvider>
-      <RouterProvider router={router} />
+      <ProjectsProvider>
+        <RouterProvider router={router} />
+      </ProjectsProvider>
     </AuthProvider>
     <Toaster />
   </React.StrictMode>
