@@ -66,7 +66,7 @@
   }
 }
 
-@layer base {
+@layer components {
   * {
     @apply border-border;
   }
@@ -74,7 +74,7 @@
     @apply bg-background text-foreground;
   }
   tr {
-    @apply mb-5 last:border-b-2 hover:bg-slate-100 first:hover:bg-background;
+    @apply mb-5 py-6 last:border-b-2 hover:bg-slate-100 first:hover:bg-background;
   }
   th {
     @apply text-sm font-semibold border-b-2 text-left py-1 px-2;

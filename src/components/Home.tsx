@@ -42,7 +42,7 @@ export default function Home() {
     <div className="py-6 px-8">
       <div className="flex justify-between items-center mb-6">
         <div className="text-2xl font-semibold">Projects</div>
-        <CreateProjectDialog />
+        <CreateProjectDialog setProjects={setProjects} />
       </div>
       <div className="max-w-56">
         <Input
@@ -52,7 +52,7 @@ export default function Home() {
         />
       </div>
       {projects && projects.length > 0 ? (
-        <table className="mt-8 w-[100%]">
+        <table className="mt-8 w-full">
           <tbody>
             <tr>
               <th className="text-center">

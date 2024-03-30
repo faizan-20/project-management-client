@@ -13,7 +13,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 import { Button } from "./ui/button";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "./ui/input";
@@ -27,13 +27,14 @@ type ProjectResponse = {
 
 type CreateProjectDialogProps = {
   setProjects: React.Dispatch<React.SetStateAction<ProjectType[] | undefined>>;
-}
+};
 
-export function CreateProjectDialog({setProjects} : CreateProjectDialogProps) {
-  const [title, setTitle] = useState("")
-  const [key, setKey] = useState("")
-  const [template, setTemplate] = useState("")
-  const [type, setType] = useState("")
+export function CreateProjectDialog({ setProjects }: CreateProjectDialogProps) {
+  const [title, setTitle] = useState("");
+  const [key, setKey] = useState("");
+  const [template, setTemplate] = useState("");
+  const [type, setType] = useState("");
+  const [open, setOpen] = useState(false);
 
   const axiosPrivate = useAxiosPrivate();
 
@@ -56,25 +57,28 @@ export function CreateProjectDialog({setProjects} : CreateProjectDialogProps) {
           return [data.project];
         }
       });
+      setOpen(false);
     } catch (error) {
       console.log(error);
     }
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>Create Project</Button>
       </DialogTrigger>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle >Create Project</DialogTitle>
+          <DialogTitle>Create Project</DialogTitle>
         </DialogHeader>
 
         <form className="flex flex-col">
-          
           <div className="flex flex-col pb-2">
-            <Label htmlFor="project-title" className="text-slate-600 pb-1 font-bold">
+            <Label
+              htmlFor="project-title"
+              className="text-slate-600 pb-1 font-bold"
+            >
               Title <span className="text-red-600">*</span>
             </Label>
             <Input
@@ -106,7 +110,10 @@ export function CreateProjectDialog({setProjects} : CreateProjectDialogProps) {
           </div>
 
           <div className="flex flex-col pb-3">
-            <Label htmlFor="project-template" className="text-slate-600 font-bold pb-1">
+            <Label
+              htmlFor="project-template"
+              className="text-slate-600 font-bold pb-1"
+            >
               Project Template
             </Label>
             <Select>
@@ -114,21 +121,26 @@ export function CreateProjectDialog({setProjects} : CreateProjectDialogProps) {
                 id="project-template"
                 name="project-template"
                 value={template}
-                onChange={(e: React.FormEvent<HTMLSelectElement>) => setTemplate((e.target as HTMLSelectElement).value)}
+                onChange={(e: React.FormEvent<HTMLSelectElement>) =>
+                  setTemplate((e.target as HTMLSelectElement).value)
+                }
                 className="px-2 text-md border-slate-400 border-2 focus:border-slate-600"
               >
                 <SelectValue placeholder="Select a template" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                    <SelectItem value="kanban">Kanban Project</SelectItem>
+                  <SelectItem value="kanban">Kanban Project</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
           </div>
 
           <div className="flex flex-col pb-2">
-            <Label htmlFor="project-type" className="text-slate-600 font-bold pb-1">
+            <Label
+              htmlFor="project-type"
+              className="text-slate-600 font-bold pb-1"
+            >
               Project Type
             </Label>
             <Select>
@@ -136,24 +148,31 @@ export function CreateProjectDialog({setProjects} : CreateProjectDialogProps) {
                 id="project-type"
                 name="project-type"
                 value={type}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setType(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                  setType(e.target.value)
+                }
                 className="px-2 text-md border-slate-400 border-2 focus:border-slate-600"
               >
                 <SelectValue placeholder="Select a type" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem value="team-managed">Team Managed Project</SelectItem>
-                  <SelectItem value="company-managed">Company Managed Project</SelectItem>
+                  <SelectItem value="team-managed">
+                    Team Managed Project
+                  </SelectItem>
+                  <SelectItem value="company-managed">
+                    Company Managed Project
+                  </SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
           </div>
-
         </form>
 
         <DialogFooter>
-          <Button type="submit" onClick={submitHandler}>Create Project</Button>
+          <Button type="submit" onClick={submitHandler}>
+            Create Project
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
