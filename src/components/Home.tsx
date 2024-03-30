@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CreateProjectDialog } from "./CreateProjectDialog";
 import ProjectRow from "./ProjectRow";
 import { Input } from "./ui/input";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { User } from "@/context/AuthProvider";
+import { ProjectsContext } from "@/context/ProjectsProvider";
 
 export type ProjectType = {
   key: string;
@@ -21,7 +22,9 @@ type ProjectResponseType = {
 };
 
 export default function Home() {
-  const [projects, setProjects] = useState<ProjectType[]>();
+  // const [projects, setProjects] = useState<ProjectType[]>();
+  const [search, setSearch] = useState("");
+  const { projects, setProjects } = useContext(ProjectsContext);
 
   const axiosPrivate = useAxiosPrivate();
 
@@ -36,7 +39,7 @@ export default function Home() {
       }
     };
     getAllProjects();
-  }, [axiosPrivate]);
+  }, [axiosPrivate, setProjects]);
 
   return (
     <div className="py-6 px-8">
@@ -47,8 +50,9 @@ export default function Home() {
       <div className="max-w-56">
         <Input
           type="text"
-          placeholder="Search projects"
+          placeholder="Search by Name or Lead"
           className="text-sm border-slate-400"
+          onChange={(e) => setSearch(e.target.value)}
         />
       </div>
       {projects && projects.length > 0 ? (
@@ -75,9 +79,20 @@ export default function Home() {
               <th>Lead</th>
               <th className="text-right">More actions</th>
             </tr>
-            {projects.map((project) => (
-              <ProjectRow key={project._id} project={project} />
-            ))}
+            {projects
+              .filter((project) => {
+                return search.toLowerCase() === ""
+                  ? project
+                  : project.title
+                      .toLowerCase()
+                      .includes(search.toLowerCase()) ||
+                      project.owner.firstname
+                        .toLowerCase()
+                        .includes(search.toLowerCase());
+              })
+              .map((project) => (
+                <ProjectRow key={project._id} project={project} />
+              ))}
           </tbody>
         </table>
       ) : (
