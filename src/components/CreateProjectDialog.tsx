@@ -116,14 +116,11 @@ export function CreateProjectDialog({ setProjects }: CreateProjectDialogProps) {
             >
               Project Template
             </Label>
-            <Select>
+            <Select onValueChange={(value) => setTemplate(value)}>
               <SelectTrigger
                 id="project-template"
                 name="project-template"
                 value={template}
-                onChange={(e: React.FormEvent<HTMLSelectElement>) =>
-                  setTemplate((e.target as HTMLSelectElement).value)
-                }
                 className="px-2 text-md border-slate-400 border-2 focus:border-slate-600"
               >
                 <SelectValue placeholder="Select a template" />
@@ -143,14 +140,11 @@ export function CreateProjectDialog({ setProjects }: CreateProjectDialogProps) {
             >
               Project Type
             </Label>
-            <Select>
+            <Select onValueChange={(value) => setType(value)}>
               <SelectTrigger
                 id="project-type"
                 name="project-type"
                 value={type}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                  setType(e.target.value)
-                }
                 className="px-2 text-md border-slate-400 border-2 focus:border-slate-600"
               >
                 <SelectValue placeholder="Select a type" />
