@@ -1,11 +1,11 @@
 import { Label } from "@radix-ui/react-label";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
+import { Input } from "../components/ui/input";
+import { Button } from "../components/ui/button";
 import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import axios from "@/api/axios";
 import { AuthContext, User } from "@/context/AuthProvider";
-import { useToast } from "./ui/use-toast";
+import { useToast } from "../components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import { isAxiosError } from "axios";
 

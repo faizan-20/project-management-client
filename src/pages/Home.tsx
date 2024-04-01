@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
-import { CreateProjectDialog } from "./CreateProjectDialog";
-import ProjectRow from "./ProjectRow";
-import { Input } from "./ui/input";
+import { CreateProjectDialog } from "../components/CreateProjectDialog";
+import ProjectRow from "../components/ProjectRow";
+import { Input } from "../components/ui/input";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { User } from "@/context/AuthProvider";
 import { ProjectsContext } from "@/context/ProjectsProvider";

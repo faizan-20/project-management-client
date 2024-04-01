@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ProjectType } from "./Home";
+import { ProjectType } from "../pages/Home";
 import { axiosPrivate } from "@/api/axios";
 import { ConfirmationDialog } from "./ConfirmationDialog";
 import { useContext } from "react";

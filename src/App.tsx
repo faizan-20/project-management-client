@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import Home from "./components/Home";
+import Home from "./pages/Home";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "./context/AuthProvider";
 import useAxiosPrivate from "./hooks/useAxiosPrivate";
