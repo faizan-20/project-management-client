@@ -8,8 +8,8 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
-import Login from "./components/Login.tsx";
-import Signup from "./components/Signup.tsx";
+import Login from "./pages/Login.tsx";
+import Signup from "./pages/Signup.tsx";
 import { Toaster } from "./components/ui/toaster.tsx";
 import AuthProvider from "./context/AuthProvider.tsx";
 import Layout from "./Layout.tsx";

@@ -18,7 +18,7 @@ import { Button } from "./ui/button";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "./ui/input";
 import { useState } from "react";
-import { ProjectType } from "./Home";
+import { ProjectType } from "../pages/Home";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 
 type ProjectResponse = {
