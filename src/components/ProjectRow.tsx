@@ -42,7 +42,9 @@ function ProjectRow({ project }: ProjectRowProps) {
         </svg>
       </td>
       <td className="text-blue-800 hover:underline min-w-[6vw] max-w-[6vw] hover:cursor-pointer">
-        {project.title}
+        <Link to={`project/${project._id}`}>
+          {project.title}
+        </Link>
       </td>
       <td className="min-w-[5vw]">{project.key}</td>
       <td className="max-w-[7vw]">Team-managed Software</td>
