@@ -59,7 +59,7 @@ export function CreateProjectDialog({ setProjects }: CreateProjectDialogProps) {
       });
       setOpen(false);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
