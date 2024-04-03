@@ -1,4 +1,4 @@
-import { ProjectType } from "@/components/Home";
+import { ProjectType } from "@/pages/Home";
 import {
   Dispatch,
   ReactNode,
