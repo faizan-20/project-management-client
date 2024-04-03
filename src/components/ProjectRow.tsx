@@ -42,7 +42,7 @@ function ProjectRow({ project }: ProjectRowProps) {
         </svg>
       </td>
       <td className="text-blue-800 hover:underline min-w-[6vw] max-w-[6vw] hover:cursor-pointer">
-        <Link to={`project/${project._id}`}>
+        <Link to={`project/${project._id}/board`}>
           {project.title}
         </Link>
       </td>

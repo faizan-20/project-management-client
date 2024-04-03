@@ -23,7 +23,8 @@ const router = createBrowserRouter(
       <Route path="/" element={<Layout />}>
         <Route path="" element={<App />} />
         <Route path="" element={<ProjectLayout />}>
-          <Route path="project/:projectId" element={<ProjectBoard />} />
+          <Route path="project/:projectId/board" element={<ProjectBoard />} />
+          <Route path="project/:projectId/timeline" element={<div>Timeline</div>} />
         </Route>
       </Route>
       <Route path="/login" element={<Login />} />

@@ -1,7 +1,7 @@
 import { ProjectsContext } from "@/context/ProjectsProvider";
 import { ProjectType } from "@/pages/Home";
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 
 function Sidebar() {
   const { projects } = useContext(ProjectsContext);
@@ -23,18 +23,33 @@ function Sidebar() {
         </div>
 
         <div className="py-3">
-          <div className="text-gray-600 text-xs font-bold">PLANNING</div>
-          <div className="">
-            <a className="cursor-pointer">
-              <div className="text-base font-normal text-gray-500 py-2">
-                Board
-              </div>
-            </a>
-          </div>
+          <div className="text-gray-600 text-xs font-bold pb-3">PLANNING</div>
+
+          <NavLink
+            to={`/project/${projectId}/board`}
+            className={({ isActive }) =>
+            isActive ? 'bg-blue-50 border-l-4 border-blue-700 text-blue-700 inline-block w-full rounded-sm' : 'text-gray-500 inline-block w-full'
+            }
+          >
+            <div className="text-base font-normal py-2 px-2 cursor-pointer">
+              Board
+            </div>
+          </NavLink>
+
+          <NavLink
+            to={`/project/${projectId}/timeline`}
+            className={({ isActive }) =>
+            isActive ? 'bg-blue-50 border-l-4 border-blue-700 text-blue-700 inline-block w-full rounded-sm' : 'text-gray-500 inline-block w-full'
+            }
+          >
+            <div className="text-base font-normal py-2 px-2 cursor-pointer">Timeline</div>
+          </NavLink>
+          
         </div>
       </div>
     </>
   );
 }
+
 
 export default Sidebar;
