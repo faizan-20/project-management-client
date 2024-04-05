@@ -86,7 +86,7 @@ export function CreateProjectDialog({ setProjects }: CreateProjectDialogProps) {
               name="project-title"
               id="project-title"
               placeholder="Enter Project Title"
-              className="px-2 text-md border-slate-400 border-2 focus:border-slate-600"
+              className="p-2 text-base border-slate-400 border-2"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
@@ -102,7 +102,7 @@ export function CreateProjectDialog({ setProjects }: CreateProjectDialogProps) {
               name="key"
               id="key"
               placeholder="Enter Project Key"
-              className="px-2 text-md border-slate-400 border-2 focus:border-slate-600"
+              className="p-2 text-base border-slate-400 border-2"
               value={key}
               onChange={(e) => setKey(e.target.value)}
               required
@@ -121,7 +121,7 @@ export function CreateProjectDialog({ setProjects }: CreateProjectDialogProps) {
                 id="project-template"
                 name="project-template"
                 value={template}
-                className="px-2 text-md border-slate-400 border-2 focus:border-slate-600"
+                className="p-2 text-base border-slate-400 border-2"
               >
                 <SelectValue placeholder="Select a template" />
               </SelectTrigger>
@@ -145,7 +145,7 @@ export function CreateProjectDialog({ setProjects }: CreateProjectDialogProps) {
                 id="project-type"
                 name="project-type"
                 value={type}
-                className="px-2 text-md border-slate-400 border-2 focus:border-slate-600"
+                className="p-2 text-base border-slate-400 border-2"
               >
                 <SelectValue placeholder="Select a type" />
               </SelectTrigger>

@@ -24,8 +24,7 @@ type ProjectResponseType = {
 export default function Home() {
   // const [projects, setProjects] = useState<ProjectType[]>();
   const [search, setSearch] = useState("");
-  const [favProjects, setFavProjects] = useState<string[]>([]);
-  const { projects, setProjects } = useContext(ProjectsContext);
+  const { projects, setProjects, setFavProjects } = useContext(ProjectsContext);
 
   const axiosPrivate = useAxiosPrivate();
 
@@ -52,7 +51,7 @@ export default function Home() {
     };
     getFavProjects();
     getAllProjects();
-  }, [axiosPrivate, setProjects]);
+  }, [axiosPrivate, setProjects, setFavProjects]);
 
   return (
     <div className="py-6 px-8">
@@ -104,12 +103,7 @@ export default function Home() {
                         .includes(search.toLowerCase());
               })
               .map((project) => (
-                <ProjectRow
-                  key={project._id}
-                  project={project}
-                  favProjects={favProjects}
-                  setFavProjects={setFavProjects}
-                />
+                <ProjectRow key={project._id} project={project} />
               ))}
           </tbody>
         </table>

@@ -13,8 +13,9 @@ function App() {
     const getUserProfile = async () => {
       try {
         const response = await axiosPrivate.get("/users/get-profile");
-        const { accessToken, firstname, email, avatar } = response.data.user;
-        setUser({ email, accessToken, firstname, avatar });
+        const { accessToken, firstname, email, avatar, favoriteProjects } =
+          response.data.user;
+        setUser({ email, accessToken, firstname, avatar, favoriteProjects });
       } catch (error) {
         localStorage.clear();
         navigate("/login");

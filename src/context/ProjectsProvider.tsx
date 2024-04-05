@@ -10,7 +10,9 @@ import {
 
 export type ProjectsContextType = {
   projects: ProjectType[];
+  favProjects: string[];
   setProjects: Dispatch<SetStateAction<ProjectType[]>>;
+  setFavProjects: Dispatch<SetStateAction<string[]>>;
 };
 
 const defaultState = {
@@ -28,7 +30,9 @@ const defaultState = {
       _id: "",
     },
   ],
+  favProjects: [],
   setProjects: () => {},
+  setFavProjects: () => {},
 } as ProjectsContextType;
 
 type ProjectsProviderProps = {
@@ -41,9 +45,14 @@ const ProjectsProvider = ({ children }: ProjectsProviderProps) => {
   const [projects, setProjects] = useState<ProjectType[]>(
     defaultState.projects
   );
+  const [favProjects, setFavProjects] = useState<string[]>(
+    defaultState.favProjects
+  );
 
   return (
-    <ProjectsContext.Provider value={{ projects, setProjects }}>
+    <ProjectsContext.Provider
+      value={{ projects, favProjects, setProjects, setFavProjects }}
+    >
       {children}
     </ProjectsContext.Provider>
   );

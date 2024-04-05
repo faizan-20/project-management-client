@@ -7,12 +7,11 @@ import { ProjectsContext } from "@/context/ProjectsProvider";
 
 type ProjectRowProps = {
   project: ProjectType;
-  favProjects: string[];
-  setFavProjects: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
-function ProjectRow({ project, favProjects, setFavProjects }: ProjectRowProps) {
-  const { setProjects } = useContext(ProjectsContext);
+function ProjectRow({ project }: ProjectRowProps) {
+  const { setProjects, favProjects, setFavProjects } =
+    useContext(ProjectsContext);
 
   const deleteProject = async () => {
     try {
@@ -77,9 +76,7 @@ function ProjectRow({ project, favProjects, setFavProjects }: ProjectRowProps) {
         )}
       </td>
       <td className="text-blue-800 hover:underline min-w-[6vw] max-w-[6vw] hover:cursor-pointer">
-        <Link to={`project/${project._id}/board`}>
-          {project.title}
-        </Link>
+        <Link to={`project/${project._id}/board`}>{project.title}</Link>
       </td>
       <td className="min-w-[5vw]">{project.key}</td>
       <td className="max-w-[7vw]">Team-managed Software</td>

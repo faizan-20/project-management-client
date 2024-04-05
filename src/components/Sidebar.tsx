@@ -18,8 +18,6 @@ function Sidebar() {
     };
 
     getCurrProject();
-
-    // setCurrProject(projects.find((project) => project._id === projectId));
   }, [projectId]);
 
   return (
