@@ -83,7 +83,7 @@ export default function Login() {
                 id="email"
                 placeholder="Enter Email"
                 type="text"
-                className="py-5 px-2 text-md border-slate-400 border-2 focus:border-slate-600"
+                className="py-5 px-2 text-md border-2"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -101,7 +101,7 @@ export default function Login() {
                 id="password"
                 placeholder="Enter Password"
                 type="password"
-                className={`py-5 px-2 text-md border-2 ${isValidPassword ? "border-slate-400" : "border-red-400"} focus:border-${isValidPassword ? "slate-600" : "red-600"}`}
+                className={`py-5 px-2 text-md border-2 ${isValidPassword ? "" : "focus:border-red-600"}`}
                 value={password}
                 onChange={(e) => handlePasswordChange(e.target.value)}
                 required

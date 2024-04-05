@@ -104,7 +104,7 @@ export default function Signup() {
                   id="firstname"
                   placeholder="Enter FirstName"
                   type="text"
-                  className="py-5 px-2 text-md border-slate-400 border-2 focus:border-slate-600"
+                  className="py-5 px-2 text-md border-2"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   required
@@ -119,7 +119,7 @@ export default function Signup() {
                   id="lastname"
                   placeholder="Enter LastName"
                   type="text"
-                  className="py-5 px-2 text-md border-slate-400 border-2 focus:border-slate-600"
+                  className="py-5 px-2 text-md border-2"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                 />
@@ -134,7 +134,7 @@ export default function Signup() {
                 id="email"
                 placeholder="Enter Email"
                 type="text"
-                className="py-5 px-2 text-md border-slate-400 border-2 focus:border-slate-600"
+                className="py-5 px-2 text-md border-2"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -149,7 +149,7 @@ export default function Signup() {
                 id="password1"
                 placeholder="Enter Password"
                 type="password"
-                className={`py-5 px-2 text-md border-2 ${isValidPassword ? "border-slate-400" : "border-red-400"} focus:border-${isValidPassword ? "slate-600" : "red-600"}`}
+                className={`py-5 px-2 text-md border-2 ${isValidPassword ? "" : "focus:border-red-600"}`}
                 value={password}
                 onChange={(e) => handleValidPassword(e.target.value)}
                 required
@@ -169,7 +169,7 @@ export default function Signup() {
                 id="password2"
                 placeholder="Enter Password"
                 type="password"
-                className={`py-5 px-2 text-md border-2 ${passwordsMatch ? "border-slate-400" : "border-red-400"} focus:border-${passwordsMatch ? "slate-600" : "red-600"}`}
+                className={`py-5 px-2 text-md border-2 ${passwordsMatch ? "primary" : "focus:border-red-600"}`}
                 value={confirmPassword}
                 onChange={(e) => {
                   handlePasswordChange(e.target.value);

@@ -2,13 +2,15 @@ import { axiosPrivate } from "@/api/axios";
 import { Input } from "@/components/ui/input";
 import { ProjectsContext } from "@/context/ProjectsProvider";
 import { ProjectType } from "@/pages/Home";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
 function ProjectBoard() {
   const { projectId } = useParams();
-  const [currProject, setCurrProject] = useState<ProjectType>();
   const { favProjects, setFavProjects } = useContext(ProjectsContext);
+  const [currProject, setCurrProject] = useState<ProjectType>();
+  const [issueVisible, setIssueVisible] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const getCurrProject = async () => {
@@ -22,6 +24,13 @@ function ProjectBoard() {
 
     getCurrProject();
   }, [projectId]);
+
+  // Focus on the input element when the div becomes visible
+  useEffect(() => {
+    if (issueVisible && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [issueVisible]);
 
   const toggleFavoriteProject = async () => {
     try {
@@ -44,6 +53,14 @@ function ProjectBoard() {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  function issueClickHandler() {
+    setIssueVisible(true);
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Escape") setIssueVisible(false);
   };
 
   return (
@@ -102,7 +119,10 @@ function ProjectBoard() {
           <div className="text-xs text-gray-500 font-semibold m-4 mt-6">
             TO DO
           </div>
-          <div className="text-sm font-semibold text-slate-800 mx-2 hover:bg-slate-200 p-2 cursor-pointer flex transition-all">
+          <div
+            className={`text-sm font-semibold text-slate-800 mx-2 hover:bg-slate-200 p-2 cursor-pointer flex transition-all ${issueVisible ? "hidden" : "block"} `}
+            onClick={issueClickHandler}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"
@@ -112,6 +132,17 @@ function ProjectBoard() {
               <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
             </svg>
             Create issue
+          </div>
+          <div className={`${issueVisible ? "block" : "hidden"}`}>
+            <Input
+              type="text"
+              name="issue"
+              id="issue"
+              placeholder="What needs to be done?"
+              className="px-2 text-base border-2 w-full h-20 bg-primary-foreground"
+              onKeyDown={handleKeyDown}
+              ref={inputRef}
+            />
           </div>
         </div>
         <div className="bg-slate-100 h-full min-h-32 w-60">
