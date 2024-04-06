@@ -18,23 +18,26 @@ import ProjectLayout from "./ProjectLayout.tsx";
 import ProjectBoard from "./pages/ProjectBoard.tsx";
 import RequireAuth from "./components/RequireAuth.tsx";
 import PersistLogin from "./components/PersistLogin.tsx";
+import Home from "./pages/Home.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route element={<PersistLogin />}>
         <Route element={<RequireAuth />}>
-          <Route path="/" element={<Layout />}>
-            <Route path="" element={<App />} />
-            <Route path="" element={<ProjectLayout />}>
-              <Route
-                path="project/:projectId/board"
-                element={<ProjectBoard />}
-              />
-              <Route
-                path="project/:projectId/timeline"
-                element={<div>Timeline</div>}
-              />
+          <Route element={<Layout />}>
+            <Route element={<App />}>
+              <Route path="/" element={<Home />} />
+              <Route element={<ProjectLayout />}>
+                <Route
+                  path="project/:projectId/board"
+                  element={<ProjectBoard />}
+                />
+                <Route
+                  path="project/:projectId/timeline"
+                  element={<div>Timeline</div>}
+                />
+              </Route>
             </Route>
           </Route>
         </Route>
