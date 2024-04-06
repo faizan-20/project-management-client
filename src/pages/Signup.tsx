@@ -17,15 +17,14 @@ export default function Signup() {
   const [passwordsMatch, setPasswordsMatch] = useState(true);
   const [isValidPassword, setIsValidPassword] = useState(true);
 
-  const { setUser } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
 
   const { toast } = useToast();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (token) navigate("/");
-  }, [navigate]);
+    if (user?.accessToken?.length) navigate("/");
+  }, [navigate, user?.accessToken?.length]);
 
   const handlePasswordChange = (value: string) => {
     setConfirmPassword(value);
@@ -67,7 +66,6 @@ export default function Signup() {
       );
       const accessToken = response?.data?.accessToken;
       const firstname = response?.data?.firstname;
-      localStorage.setItem("accessToken", accessToken);
       setUser({ email, firstname, accessToken });
       setFirstName("");
       setLastName("");
