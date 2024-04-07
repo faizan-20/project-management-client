@@ -3,10 +3,24 @@ import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useContext, useState } from "react";
 import { Drawer, DrawerClose, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle } from "./ui/drawer";
 import { Button } from "./ui/button";
+import axios from "@/api/axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
   const { user } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const logoutUser = async () => {
+    try {
+      await axios.get("/users/logout");
+      localStorage.removeItem("accessToken");
+      console.log('LOGOUT');
+      navigate('/');
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <div className="">
@@ -120,6 +134,9 @@ export default function Header() {
                 <Button variant="secondary">Edit</Button>
                 <DrawerClose asChild>
                   <Button variant="outline">Cancel</Button>
+                </DrawerClose>
+                <DrawerClose asChild>
+                  <Button variant="destructive" onClick={logoutUser}>Logout</Button>
                 </DrawerClose>
               </DrawerFooter>
             </div>
