@@ -1,30 +1,15 @@
 import { AuthContext } from "@/context/AuthProvider";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useContext, useState } from "react";
-import { Drawer, DrawerClose, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle } from "./ui/drawer";
-import { Button } from "./ui/button";
-import axios from "@/api/axios";
-import { useNavigate } from "react-router-dom";
+import ProfileDrawer from "./ProfileDrawer";
 
 export default function Header() {
   const { user } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
-  const navigate = useNavigate();
-
-  const logoutUser = async () => {
-    try {
-      await axios.get("/users/logout");
-      localStorage.removeItem("accessToken");
-      console.log('LOGOUT');
-      navigate('/');
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
   return (
     <div className="">
-      {!open ? (<div className="flex justify-between items-center px-6 h-12 border-b-2 border-slate-200">
+      <div className="flex justify-between items-center px-6 h-12 border-b-2 border-slate-200">
         <div className="flex gap-4 items-center">
           <div className="flex mr-6 gap-2 items-center hover:cursor-pointer hover:bg-slate-300 px-2 py-1 transition-all rounded-sm select-none">
             <div>
@@ -91,28 +76,8 @@ export default function Header() {
           </div>
           <div className="text-base text-slate-600 hover:cursor-pointer hover:bg-slate-300 px-2 py-1 transition-all rounded-sm">
             <div className="w-6 h-6">
-              <Avatar onClick={() => setOpen(!open)}>
-                <AvatarImage
-                  className="rounded-full"
-                  src={user.avatar}
-                  alt={`${user.firstname}'s Avatar`}
-                />
-                <AvatarFallback className="rounded-full">
-                  {user.firstname && user.firstname.length > 0
-                    ? user.firstname[0].toLowerCase()
-                    : ""}
-                </AvatarFallback>
-              </Avatar>
-            </div>
-          </div>
-        </div>
-      </div>) : (
-        <Drawer open={open} onOpenChange={setOpen}>
-          <DrawerContent>
-            <div className="mx-auto w-full max-w-sm">
-              <DrawerHeader>
-                {/* ADD AVATAR HERE */}
-                <Avatar>
+              <ProfileDrawer user={user}>
+                <Avatar onClick={() => setOpen(!open)}>
                   <AvatarImage
                     className="rounded-full"
                     src={user.avatar}
@@ -124,27 +89,11 @@ export default function Header() {
                       : ""}
                   </AvatarFallback>
                 </Avatar>
-
-                <DrawerTitle>Name: <span className="font-normal"> {user.firstname}</span></DrawerTitle>
-                <DrawerTitle>Email: <span className="font-normal"> {user.email}</span></DrawerTitle>
-              </DrawerHeader>
-
-
-              <DrawerFooter>
-                <Button variant="secondary">Edit</Button>
-                <DrawerClose asChild>
-                  <Button variant="outline">Cancel</Button>
-                </DrawerClose>
-                <DrawerClose asChild>
-                  <Button variant="destructive" onClick={logoutUser}>Logout</Button>
-                </DrawerClose>
-              </DrawerFooter>
+              </ProfileDrawer>
             </div>
-          </DrawerContent>
-        </Drawer>
-      )}
+          </div>
+        </div>
+      </div>
     </div>
-
-
   );
 }
