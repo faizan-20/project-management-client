@@ -1,11 +1,13 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import useAxiosPrivate from "./hooks/useAxiosPrivate";
 import useAuth from "./hooks/useAuth";
+import { ProjectsContext } from "./context/ProjectsProvider";
 
 function App() {
   const navigate = useNavigate();
   const { setUser } = useAuth();
+  const { setFavProjects } = useContext(ProjectsContext);
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
@@ -22,7 +24,22 @@ function App() {
       }
     };
     getUserProfile();
-  }, [setUser, navigate, axiosPrivate]);
+  }, [setUser, navigate, axiosPrivate, setFavProjects]);
+
+  useEffect(() => {
+    const getFavProjects = async () => {
+      try {
+        const { data } = await axiosPrivate.get(
+          "/projects/get-all-fav-projects"
+        );
+        setFavProjects(data.favoriteProjects);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getFavProjects();
+  }, [axiosPrivate, setFavProjects]);
 
   return <Outlet />;
 }

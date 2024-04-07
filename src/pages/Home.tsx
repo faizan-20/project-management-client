@@ -24,22 +24,11 @@ type ProjectResponseType = {
 export default function Home() {
   // const [projects, setProjects] = useState<ProjectType[]>();
   const [search, setSearch] = useState("");
-  const { projects, setProjects, setFavProjects } = useContext(ProjectsContext);
+  const { projects, setProjects } = useContext(ProjectsContext);
 
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
-    const getFavProjects = async () => {
-      try {
-        const { data } = await axiosPrivate.get(
-          "/projects/get-all-fav-projects"
-        );
-        setFavProjects(data.favoriteProjects);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
     const getAllProjects = async () => {
       try {
         const { data } =
@@ -49,9 +38,8 @@ export default function Home() {
         console.error(error);
       }
     };
-    getFavProjects();
     getAllProjects();
-  }, [axiosPrivate, setProjects, setFavProjects]);
+  }, [axiosPrivate, setProjects]);
 
   return (
     <div className="py-6 px-8">

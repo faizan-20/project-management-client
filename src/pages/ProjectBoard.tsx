@@ -8,8 +8,11 @@ import { useParams } from "react-router-dom";
 function ProjectBoard() {
   const { projectId } = useParams();
   const { favProjects, setFavProjects } = useContext(ProjectsContext);
+
   const [currProject, setCurrProject] = useState<ProjectType>();
   const [issueVisible, setIssueVisible] = useState(false);
+  const [issueTitle, setIssueTitle] = useState("");
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -22,7 +25,17 @@ function ProjectBoard() {
       }
     };
 
+    const getAllIssues = async () => {
+      try {
+        const { data } = await axiosPrivate.get(`/issues/${projectId}`);
+        console.log(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     getCurrProject();
+    getAllIssues();
   }, [projectId]);
 
   // Focus on the input element when the div becomes visible
@@ -59,8 +72,23 @@ function ProjectBoard() {
     setIssueVisible(true);
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Escape") setIssueVisible(false);
+
+    if (e.key === "Enter") {
+      try {
+        const { data } = await axiosPrivate.post("/issues/create-issue", {
+          projectId,
+          title: issueTitle,
+        });
+        console.log(data);
+        setIssueTitle("");
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIssueVisible(false);
+      }
+    }
   };
 
   return (
@@ -111,6 +139,8 @@ function ProjectBoard() {
           id="search-issue"
           placeholder="Search"
           className="px-2 text-base border-slate-200 border-2 max-w-60"
+          value={issueTitle}
+          onChange={(e) => setIssueTitle(e.target.value)}
         />
       </div>
 
