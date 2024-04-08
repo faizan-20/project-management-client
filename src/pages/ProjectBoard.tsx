@@ -1,19 +1,25 @@
 import { axiosPrivate } from "@/api/axios";
+import ProgressBoard from "@/components/ProgressBoard";
 import { Input } from "@/components/ui/input";
 import { ProjectsContext } from "@/context/ProjectsProvider";
 import { ProjectType } from "@/pages/Home";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+
+export type IssueType = {
+  _id: string;
+  type: string;
+  projectId: string;
+  title: string;
+  key: string;
+};
 
 function ProjectBoard() {
   const { projectId } = useParams();
   const { favProjects, setFavProjects } = useContext(ProjectsContext);
 
   const [currProject, setCurrProject] = useState<ProjectType>();
-  const [issueVisible, setIssueVisible] = useState(false);
-  const [issueTitle, setIssueTitle] = useState("");
-
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [allIssues, setAllIssues] = useState<IssueType[]>([]);
 
   useEffect(() => {
     const getCurrProject = async () => {
@@ -28,7 +34,7 @@ function ProjectBoard() {
     const getAllIssues = async () => {
       try {
         const { data } = await axiosPrivate.get(`/issues/${projectId}`);
-        console.log(data);
+        setAllIssues(data.issues);
       } catch (error) {
         console.error(error);
       }
@@ -37,13 +43,6 @@ function ProjectBoard() {
     getCurrProject();
     getAllIssues();
   }, [projectId]);
-
-  // Focus on the input element when the div becomes visible
-  useEffect(() => {
-    if (issueVisible && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [issueVisible]);
 
   const toggleFavoriteProject = async () => {
     try {
@@ -65,29 +64,6 @@ function ProjectBoard() {
       }
     } catch (error) {
       console.error(error);
-    }
-  };
-
-  function issueClickHandler() {
-    setIssueVisible(true);
-  }
-
-  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Escape") setIssueVisible(false);
-
-    if (e.key === "Enter") {
-      try {
-        const { data } = await axiosPrivate.post("/issues/create-issue", {
-          projectId,
-          title: issueTitle,
-        });
-        console.log(data);
-        setIssueTitle("");
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setIssueVisible(false);
-      }
     }
   };
 
@@ -139,69 +115,13 @@ function ProjectBoard() {
           id="search-issue"
           placeholder="Search"
           className="px-2 text-base border-slate-200 border-2 max-w-60"
-          value={issueTitle}
-          onChange={(e) => setIssueTitle(e.target.value)}
         />
       </div>
-
-      <div className="flex gap-4 mt-6">
-        <div className="bg-slate-100 h-full min-h-32 w-60">
-          <div className="text-xs text-gray-500 font-semibold m-4 mt-6">
-            TO DO
-          </div>
-          <div
-            className={`text-sm font-semibold text-slate-800 mx-2 hover:bg-slate-200 p-2 cursor-pointer flex transition-all ${issueVisible ? "hidden" : "block"} `}
-            onClick={issueClickHandler}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              className="w-5 h-5 text-slate-500"
-            >
-              <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
-            </svg>
-            Create issue
-          </div>
-          <div className={`${issueVisible ? "block" : "hidden"}`}>
-            <Input
-              type="text"
-              name="issue"
-              id="issue"
-              placeholder="What needs to be done?"
-              className="px-2 text-base border-2 w-full h-20 bg-primary-foreground"
-              onKeyDown={handleKeyDown}
-              ref={inputRef}
-            />
-          </div>
-        </div>
-        <div className="bg-slate-100 h-full min-h-32 w-60">
-          <div className="text-xs text-gray-500 font-semibold m-4 flex justify-between items-center">
-            <div>IN PROGRESS</div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              className="w-7 h-7 text-slate-500 hover:bg-slate-200 rounded-sm cursor-pointer p-1 transition-all"
-            >
-              <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
-            </svg>
-          </div>
-        </div>
-        <div className="bg-slate-100 h-full min-h-32 w-60">
-          <div className="text-xs text-gray-500 font-semibold m-4 flex justify-between items-center">
-            <div>DONE</div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              className="w-7 h-7 text-slate-500 hover:bg-slate-200 rounded-sm cursor-pointer p-1 transition-all"
-            >
-              <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
-            </svg>
-          </div>
-        </div>
-      </div>
+      <ProgressBoard
+        allIssues={allIssues}
+        projectId={projectId}
+        setAllIssues={setAllIssues}
+      />
     </div>
   );
 }
