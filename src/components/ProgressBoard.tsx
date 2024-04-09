@@ -23,7 +23,10 @@ export default function ProgressBoard({
   const doneInputRef = useRef<HTMLInputElement>(null);
   const axiosPrivate = useAxiosPrivate();
 
-  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = async (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    status: string
+  ) => {
     console.log();
     if (e.key === "Escape") {
       setIssueVisible(false);
@@ -36,6 +39,7 @@ export default function ProgressBoard({
         const { data } = await axiosPrivate.post("/issues/create-issue", {
           projectId,
           title: issueTitle,
+          status: status,
         });
         setIssueTitle("");
         setAllIssues([...allIssues, data.issue]);
@@ -69,13 +73,17 @@ export default function ProgressBoard({
           TO DO
         </div>
         <div>
-          {allIssues.map((issue) => (
-            <IssueCard
-              key={issue._id}
-              title={issue.title}
-              issueKey={issue.key}
-            />
-          ))}
+          {allIssues.map((issue) => {
+            if (issue.status === "todo") {
+              return (
+                <IssueCard
+                  key={issue._id}
+                  title={issue.title}
+                  issueKey={issue.key}
+                />
+              );
+            }
+          })}
         </div>
         {!issueVisible ? (
           <div
@@ -100,7 +108,7 @@ export default function ProgressBoard({
               id="issue"
               placeholder="What needs to be done?"
               className="px-2 text-base border-2 w-full h-20 bg-primary-foreground"
-              onKeyDown={handleKeyDown}
+              onKeyDown={(e) => handleKeyDown(e, "todo")}
               ref={inputRef}
               value={issueTitle}
               onChange={(e) => setIssueTitle(e.target.value)}
@@ -121,6 +129,19 @@ export default function ProgressBoard({
             <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
           </svg>
         </div>
+        <div>
+          {allIssues.map((issue) => {
+            if (issue.status === "inprogress") {
+              return (
+                <IssueCard
+                  key={issue._id}
+                  title={issue.title}
+                  issueKey={issue.key}
+                />
+              );
+            }
+          })}
+        </div>
         {progressIssueVisible && (
           <div>
             <Input
@@ -129,7 +150,7 @@ export default function ProgressBoard({
               id="progress-issue"
               placeholder="What needs to be done?"
               className="px-2 text-base border-2 w-full h-20 bg-primary-foreground"
-              onKeyDown={handleKeyDown}
+              onKeyDown={(e) => handleKeyDown(e, "inprogress")}
               ref={progressInputRef}
               value={issueTitle}
               onChange={(e) => setIssueTitle(e.target.value)}
@@ -150,6 +171,19 @@ export default function ProgressBoard({
             <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
           </svg>
         </div>
+        <div>
+          {allIssues.map((issue) => {
+            if (issue.status === "done") {
+              return (
+                <IssueCard
+                  key={issue._id}
+                  title={issue.title}
+                  issueKey={issue.key}
+                />
+              );
+            }
+          })}
+        </div>
         {doneIssueVisible && (
           <div>
             <Input
@@ -158,7 +192,7 @@ export default function ProgressBoard({
               id="progress-issue"
               placeholder="What needs to be done?"
               className="px-2 text-base border-2 w-full h-20 bg-primary-foreground"
-              onKeyDown={handleKeyDown}
+              onKeyDown={(e) => handleKeyDown(e, "done")}
               ref={doneInputRef}
               value={issueTitle}
               onChange={(e) => setIssueTitle(e.target.value)}
