@@ -1,7 +1,7 @@
-import { axiosPrivate } from "@/api/axios";
 import ProgressBoard from "@/components/ProgressBoard";
 import { Input } from "@/components/ui/input";
 import { ProjectsContext } from "@/context/ProjectsProvider";
+import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { ProjectType } from "@/pages/Home";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -17,6 +17,8 @@ export type IssueType = {
 
 function ProjectBoard() {
   const { projectId } = useParams();
+  const axiosPrivate = useAxiosPrivate();
+
   const { favProjects, setFavProjects } = useContext(ProjectsContext);
 
   const [currProject, setCurrProject] = useState<ProjectType>();

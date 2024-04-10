@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { ProjectType } from "../pages/Home";
-import { axiosPrivate } from "@/api/axios";
 import { ConfirmationDialog } from "./ConfirmationDialog";
 import { useContext } from "react";
 import { ProjectsContext } from "@/context/ProjectsProvider";
+import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 
 type ProjectRowProps = {
   project: ProjectType;
@@ -12,6 +12,8 @@ type ProjectRowProps = {
 function ProjectRow({ project }: ProjectRowProps) {
   const { setProjects, favProjects, setFavProjects } =
     useContext(ProjectsContext);
+
+  const axiosPrivate = useAxiosPrivate();
 
   const deleteProject = async () => {
     try {

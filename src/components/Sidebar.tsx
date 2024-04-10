@@ -1,10 +1,12 @@
-import { axiosPrivate } from "@/api/axios";
+import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { ProjectType } from "@/pages/Home";
 import { useEffect, useState } from "react";
 import { NavLink, useParams } from "react-router-dom";
 
 function Sidebar() {
   const { projectId } = useParams();
+  const axiosPrivate = useAxiosPrivate();
+
   const [currProject, setCurrProject] = useState<ProjectType>();
 
   useEffect(() => {
