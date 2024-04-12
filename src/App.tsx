@@ -1,30 +1,47 @@
 import { useContext, useEffect } from "react";
-import Home from "./pages/Home";
-import { useNavigate } from "react-router-dom";
-import { AuthContext } from "./context/AuthProvider";
+import { Outlet, useNavigate } from "react-router-dom";
 import useAxiosPrivate from "./hooks/useAxiosPrivate";
+import useAuth from "./hooks/useAuth";
+import { ProjectsContext } from "./context/ProjectsProvider";
 
 function App() {
   const navigate = useNavigate();
-  const { setUser } = useContext(AuthContext);
+  const { setUser } = useAuth();
+  const { setFavProjects } = useContext(ProjectsContext);
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
     const getUserProfile = async () => {
       try {
         const response = await axiosPrivate.get("/users/get-profile");
-        const { accessToken, firstname, email, avatar } = response.data.user;
-        setUser({ email, accessToken, firstname, avatar });
+        const { firstname, email, avatar, favoriteProjects } =
+          response.data.user;
+        const accessToken = response.data.accessToken;
+        setUser({ email, accessToken, firstname, avatar, favoriteProjects });
       } catch (error) {
-        localStorage.clear();
         navigate("/login");
         console.error(error);
       }
     };
     getUserProfile();
-  }, [setUser, navigate, axiosPrivate]);
+  }, [setUser, navigate, axiosPrivate, setFavProjects]);
 
-  return <Home />;
+  useEffect(() => {
+    const getFavProjects = async () => {
+      try {
+        const { data } = await axiosPrivate.get(
+          "/projects/get-all-fav-projects"
+        );
+        setFavProjects(data.favoriteProjects);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getFavProjects();
+  }, [axiosPrivate, setFavProjects]);
+
+  return <Outlet />;
 }
 
 export default App;

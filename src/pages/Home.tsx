@@ -24,23 +24,11 @@ type ProjectResponseType = {
 export default function Home() {
   // const [projects, setProjects] = useState<ProjectType[]>();
   const [search, setSearch] = useState("");
-  const [favProjects, setFavProjects] = useState<string[]>([]);
   const { projects, setProjects } = useContext(ProjectsContext);
 
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
-    const getFavProjects = async () => {
-      try {
-        const { data } = await axiosPrivate.get(
-          "/projects/get-all-fav-projects"
-        );
-        setFavProjects(data.favoriteProjects);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
     const getAllProjects = async () => {
       try {
         const { data } =
@@ -50,7 +38,6 @@ export default function Home() {
         console.error(error);
       }
     };
-    getFavProjects();
     getAllProjects();
   }, [axiosPrivate, setProjects]);
 
@@ -64,7 +51,7 @@ export default function Home() {
         <Input
           type="text"
           placeholder="Search by Name or Lead"
-          className="text-sm border-slate-400"
+          className="text-sm border-slate-400 border-2"
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
@@ -104,12 +91,7 @@ export default function Home() {
                         .includes(search.toLowerCase());
               })
               .map((project) => (
-                <ProjectRow
-                  key={project._id}
-                  project={project}
-                  favProjects={favProjects}
-                  setFavProjects={setFavProjects}
-                />
+                <ProjectRow key={project._id} project={project} />
               ))}
           </tbody>
         </table>

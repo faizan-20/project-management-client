@@ -1,3 +1,4 @@
+import { ProjectType } from "@/pages/Home";
 import {
   useState,
   createContext,
@@ -11,6 +12,7 @@ export type User = {
   email: string;
   accessToken: string;
   avatar?: string;
+  favoriteProjects?: ProjectType[];
 };
 
 export interface AuthContextInterface {
@@ -23,6 +25,7 @@ const defaultState = {
     firstname: "",
     email: "",
     accessToken: "",
+    favoriteProjects: [],
   },
   setUser: () => {},
 } as AuthContextInterface;
@@ -38,6 +41,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     firstname: "",
     email: "",
     accessToken: "",
+    favoriteProjects: [],
   });
 
   return (

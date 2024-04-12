@@ -1,18 +1,19 @@
 import { Link } from "react-router-dom";
 import { ProjectType } from "../pages/Home";
-import { axiosPrivate } from "@/api/axios";
 import { ConfirmationDialog } from "./ConfirmationDialog";
 import { useContext } from "react";
 import { ProjectsContext } from "@/context/ProjectsProvider";
+import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 
 type ProjectRowProps = {
   project: ProjectType;
-  favProjects: string[];
-  setFavProjects: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
-function ProjectRow({ project, favProjects, setFavProjects }: ProjectRowProps) {
-  const { setProjects } = useContext(ProjectsContext);
+function ProjectRow({ project }: ProjectRowProps) {
+  const { setProjects, favProjects, setFavProjects } =
+    useContext(ProjectsContext);
+
+  const axiosPrivate = useAxiosPrivate();
 
   const deleteProject = async () => {
     try {
@@ -77,9 +78,7 @@ function ProjectRow({ project, favProjects, setFavProjects }: ProjectRowProps) {
         )}
       </td>
       <td className="text-blue-800 hover:underline min-w-[6vw] max-w-[6vw] hover:cursor-pointer">
-        <Link to={`project/${project._id}/board`}>
-          {project.title}
-        </Link>
+        <Link to={`project/${project._id}/board`}>{project.title}</Link>
       </td>
       <td className="min-w-[5vw]">{project.key}</td>
       <td className="max-w-[7vw]">Team-managed Software</td>

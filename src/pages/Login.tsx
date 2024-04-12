@@ -1,28 +1,30 @@
 import { Label } from "@radix-ui/react-label";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
-import { Link } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 import axios from "@/api/axios";
-import { AuthContext, User } from "@/context/AuthProvider";
+import { User } from "@/context/AuthProvider";
 import { useToast } from "../components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import { isAxiosError } from "axios";
+import useAuth from "@/hooks/useAuth";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isValidPassword, setIsValidPassword] = useState(true);
 
-  const { setUser } = useContext(AuthContext);
+  const { user, setUser } = useAuth();
 
   const { toast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (token) navigate("/");
-  }, [navigate]);
+    if (user?.accessToken?.length) navigate("/");
+  }, [navigate, user?.accessToken?.length]);
 
   const submitHandler = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -39,11 +41,10 @@ export default function Login() {
       );
       const accessToken = response?.data?.accessToken;
       const firstname = response?.data?.firstname;
-      localStorage.setItem("accessToken", accessToken);
       setUser({ email, firstname, accessToken });
       setEmail("");
       setPassword("");
-      navigate("/");
+      navigate(from, { replace: true });
     } catch (error) {
       if (isAxiosError(error)) {
         toast({
@@ -83,7 +84,7 @@ export default function Login() {
                 id="email"
                 placeholder="Enter Email"
                 type="text"
-                className="py-5 px-2 text-md border-slate-400 border-2 focus:border-slate-600"
+                className="py-5 px-2 text-md border-2"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -101,7 +102,7 @@ export default function Login() {
                 id="password"
                 placeholder="Enter Password"
                 type="password"
-                className={`py-5 px-2 text-md border-2 ${isValidPassword ? "border-slate-400" : "border-red-400"} focus:border-${isValidPassword ? "slate-600" : "red-600"}`}
+                className={`py-5 px-2 text-md border-2 ${isValidPassword ? "" : "focus:border-red-600"}`}
                 value={password}
                 onChange={(e) => handlePasswordChange(e.target.value)}
                 required
