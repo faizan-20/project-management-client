@@ -1,6 +1,19 @@
-function IssueCard({ title, issueKey }: { title: string; issueKey: string }) {
+import { IssueType } from "@/pages/ProjectBoard";
+
+function IssueCard({
+  title,
+  issueKey,
+  currIssue,
+}: {
+  title: string;
+  issueKey: string;
+  currIssue: IssueType;
+}) {
   return (
-    <div className="flex flex-col p-2 m-1 bg-white h-fit rounded-sm border border-slate-300 shadow-md cursor-pointer hover:bg-blue-50 transition-all duration-150">
+    <div
+      className="flex flex-col p-2 m-1 bg-white h-fit rounded-sm border border-slate-300 shadow-md cursor-pointer hover:bg-blue-50 transition-all duration-150"
+      onClick={() => console.log(currIssue)}
+    >
       <div className="text-sm pb-4 pl-1">{title}</div>
       <div className="flex items-center">
         <div className="mr-2">

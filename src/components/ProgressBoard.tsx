@@ -99,11 +99,11 @@ export default function ProgressBoard({
                 return issueSearch.toLowerCase() === ""
                   ? issue
                   : issue.title
-                    .toLowerCase()
-                    .includes(issueSearch.toLowerCase()) ||
-                  issue.key
-                    .toLowerCase()
-                    .includes(issueSearch.toLowerCase())
+                      .toLowerCase()
+                      .includes(issueSearch.toLowerCase()) ||
+                      issue.key
+                        .toLowerCase()
+                        .includes(issueSearch.toLowerCase());
               })
               .map((issue) => {
                 if (issue.status === status) {
@@ -112,8 +112,9 @@ export default function ProgressBoard({
                       key={issue._id}
                       title={issue.title}
                       issueKey={issue.key}
+                      currIssue={issue}
                     />
-                  )
+                  );
                 }
               })}
           </div>
