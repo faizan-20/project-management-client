@@ -23,6 +23,7 @@ function ProjectBoard() {
 
   const [currProject, setCurrProject] = useState<ProjectType>();
   const [allIssues, setAllIssues] = useState<IssueType[]>([]);
+  const [issueSearch, setIssueSearch] = useState("");
 
   useEffect(() => {
     const getCurrProject = async () => {
@@ -115,12 +116,15 @@ function ProjectBoard() {
         <Input
           type="text"
           name="search-issue"
+          value={issueSearch}
+          onChange={(e) => setIssueSearch(e.target.value)}
           id="search-issue"
           placeholder="Search"
           className="px-2 text-base border-slate-200 border-2 max-w-60"
         />
       </div>
       <ProgressBoard
+        issueSearch={issueSearch}
         allIssues={allIssues}
         projectId={projectId}
         setAllIssues={setAllIssues}

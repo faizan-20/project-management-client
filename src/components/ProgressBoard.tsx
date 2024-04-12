@@ -5,10 +5,12 @@ import { IssueType } from "@/pages/ProjectBoard";
 import { Input } from "./ui/input";
 
 export default function ProgressBoard({
+  issueSearch,
   allIssues,
   projectId,
   setAllIssues,
 }: {
+  issueSearch: string;
   allIssues: IssueType[];
   projectId: string | undefined;
   setAllIssues: React.Dispatch<React.SetStateAction<IssueType[]>>;
@@ -92,18 +94,28 @@ export default function ProgressBoard({
             {status.toUpperCase()}
           </div>
           <div>
-            {allIssues.map((issue) => {
-              if (issue.status === status) {
-                return (
-                  <IssueCard
-                    key={issue._id}
-                    title={issue.title}
-                    issueKey={issue.key}
-                  />
-                );
-              }
-              return null;
-            })}
+            {allIssues
+              .filter((issue) => {
+                return issueSearch.toLowerCase() === ""
+                  ? issue
+                  : issue.title
+                    .toLowerCase()
+                    .includes(issueSearch.toLowerCase()) ||
+                  issue.key
+                    .toLowerCase()
+                    .includes(issueSearch.toLowerCase())
+              })
+              .map((issue) => {
+                if (issue.status === status) {
+                  return (
+                    <IssueCard
+                      key={issue._id}
+                      title={issue.title}
+                      issueKey={issue.key}
+                    />
+                  )
+                }
+              })}
           </div>
           {!visibleSection && (
             <div
