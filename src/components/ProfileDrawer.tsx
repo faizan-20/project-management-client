@@ -10,24 +10,24 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Button } from "./ui/button";
 import { useState } from "react";
-import { User } from "@/context/AuthProvider";
 import { axiosPrivate } from "@/api/axios";
 import { useNavigate } from "react-router-dom";
+import useAuth from "@/hooks/useAuth";
 
 export default function ProfileDrawer({
-  user,
   children,
 }: {
-  user: User;
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const { user, setUser } = useAuth();
 
   const logoutUser = async () => {
     try {
       await axiosPrivate.get("/users/logout");
       localStorage.removeItem("accessToken");
+      setUser(null);
       navigate("/login");
     } catch (error) {
       console.error(error);
@@ -44,21 +44,21 @@ export default function ProfileDrawer({
             <Avatar>
               <AvatarImage
                 className="rounded-full"
-                src={user.avatar}
-                alt={`${user.firstname}'s Avatar`}
+                src={user?.avatar}
+                alt={`${user?.firstname}'s Avatar`}
               />
               <AvatarFallback className="rounded-full">
-                {user.firstname && user.firstname.length > 0
+                {user?.firstname && user.firstname.length > 0
                   ? user.firstname[0].toLowerCase()
                   : ""}
               </AvatarFallback>
             </Avatar>
 
             <DrawerTitle>
-              Name: <span className="font-normal"> {user.firstname}</span>
+              Name: <span className="font-normal"> {user?.firstname}</span>
             </DrawerTitle>
             <DrawerTitle>
-              Email: <span className="font-normal"> {user.email}</span>
+              Email: <span className="font-normal"> {user?.email}</span>
             </DrawerTitle>
           </DrawerHeader>
 

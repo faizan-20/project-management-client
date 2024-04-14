@@ -14,10 +14,17 @@ function App() {
     const getUserProfile = async () => {
       try {
         const response = await axiosPrivate.get("/users/get-profile");
-        const { firstname, email, avatar, favoriteProjects } =
+        const { firstname, email, avatar, favoriteProjects, _id } =
           response.data.user;
         const accessToken = response.data.accessToken;
-        setUser({ email, accessToken, firstname, avatar, favoriteProjects });
+        setUser({
+          email,
+          accessToken,
+          firstname,
+          avatar,
+          favoriteProjects,
+          _id,
+        });
       } catch (error) {
         navigate("/login");
         console.error(error);

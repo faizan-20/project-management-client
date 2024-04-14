@@ -39,9 +39,8 @@ export default function Login() {
           withCredentials: true,
         }
       );
-      const accessToken = response?.data?.accessToken;
-      const firstname = response?.data?.firstname;
-      setUser({ email, firstname, accessToken });
+      const { _id, firstname, accessToken } = response.data;
+      setUser({ _id, email, firstname, accessToken });
       setEmail("");
       setPassword("");
       navigate(from, { replace: true });
@@ -49,7 +48,7 @@ export default function Login() {
       if (isAxiosError(error)) {
         toast({
           variant: "destructive",
-          title: error?.response?.data?.message,
+          title: error?.response?.data.message,
         });
       } else {
         console.error(error);

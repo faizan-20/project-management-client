@@ -20,7 +20,7 @@ function Sidebar() {
     };
 
     getCurrProject();
-  }, [projectId]);
+  }, [projectId, axiosPrivate]);
 
   return (
     <>

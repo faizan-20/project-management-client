@@ -64,9 +64,8 @@ export default function Signup() {
           withCredentials: true,
         }
       );
-      const accessToken = response?.data?.accessToken;
-      const firstname = response?.data?.firstname;
-      setUser({ email, firstname, accessToken });
+      const { _id, firstname, accessToken } = response.data;
+      setUser({ _id, email, firstname, accessToken });
       setFirstName("");
       setLastName("");
       setEmail("");

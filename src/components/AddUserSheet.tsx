@@ -13,6 +13,7 @@ import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { ConfirmationDialog } from "./ConfirmationDialog";
+import { useToast } from "./ui/use-toast";
 
 export default function AddUserSheet({
   children,
@@ -25,6 +26,7 @@ export default function AddUserSheet({
   const [users, setUsers] = useState<User[]>();
 
   const axiosPrivate = useAxiosPrivate();
+  const { toast } = useToast();
 
   useEffect(() => {
     const getAllUsers = async () => {
@@ -54,6 +56,10 @@ export default function AddUserSheet({
   const addUser = async (userId: string) => {
     try {
       await axiosPrivate.post(`/projects/add-user/${projectId}`, { userId });
+      toast({
+        variant: "default",
+        title: "User added to project successfully!",
+      });
     } catch (error) {
       console.error(error);
     }

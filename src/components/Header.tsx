@@ -76,15 +76,15 @@ export default function Header() {
           </div>
           <div className="text-base text-slate-600 hover:cursor-pointer hover:bg-slate-300 px-2 py-1 transition-all rounded-sm">
             <div className="w-6 h-6">
-              <ProfileDrawer user={user}>
+              <ProfileDrawer>
                 <Avatar onClick={() => setOpen(!open)}>
                   <AvatarImage
                     className="rounded-full"
-                    src={user.avatar}
-                    alt={`${user.firstname}'s Avatar`}
+                    src={user?.avatar}
+                    alt={`${user?.firstname}'s Avatar`}
                   />
                   <AvatarFallback className="rounded-full">
-                    {user.firstname && user.firstname.length > 0
+                    {user?.firstname && user.firstname.length > 0
                       ? user.firstname[0].toLowerCase()
                       : ""}
                   </AvatarFallback>

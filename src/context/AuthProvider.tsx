@@ -18,8 +18,8 @@ export type User = {
 };
 
 export interface AuthContextInterface {
-  user: User;
-  setUser: Dispatch<SetStateAction<User>>;
+  user: User | null;
+  setUser: Dispatch<SetStateAction<User | null>>;
 }
 
 const defaultState = {
@@ -40,13 +40,7 @@ type AuthProviderProps = {
 };
 
 export default function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User>({
-    _id: "",
-    firstname: "",
-    email: "",
-    accessToken: "",
-    favoriteProjects: [],
-  });
+  const [user, setUser] = useState<User | null>(null);
 
   return (
     <AuthContext.Provider value={{ user, setUser }}>

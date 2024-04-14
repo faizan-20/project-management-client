@@ -10,6 +10,7 @@ const useRefreshToken = () => {
     });
 
     setUser((prev) => {
+      if (prev === null) return prev;
       return { ...prev, accessToken: response.data.accessToken };
     });
 
