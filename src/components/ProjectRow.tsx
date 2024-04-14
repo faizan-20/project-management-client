@@ -89,7 +89,11 @@ function ProjectRow({ project }: ProjectRowProps) {
       </td>
       <td className="flex justify-end">
         <div className="p-1 hover:bg-slate-200 rounded-sm cursor-pointer">
-          <ConfirmationDialog deleteProject={deleteProject}>
+          <ConfirmationDialog
+            confirmationFunction={deleteProject}
+            title="Are you sure you want to delete this project?"
+            description="This will permanently delete the project"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

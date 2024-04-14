@@ -12,11 +12,14 @@ import { User } from "@/context/AuthProvider";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
+import { ConfirmationDialog } from "./ConfirmationDialog";
 
 export default function AddUserSheet({
   children,
+  projectId,
 }: {
   children: React.ReactNode;
+  projectId: string | undefined;
 }) {
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState<User[]>();
@@ -43,6 +46,14 @@ export default function AddUserSheet({
         `/users/get-all?search=${search}`
       );
       setUsers(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const addUser = async (userId: string) => {
+    try {
+      await axiosPrivate.post(`/projects/add-user/${projectId}`, { userId });
     } catch (error) {
       console.error(error);
     }
@@ -83,17 +94,24 @@ export default function AddUserSheet({
           <div className="flex-col flex gap-2 mt-2">
             {users?.length ? (
               users.map((user) => (
-                <Card key={user._id} className="flex items-center px-4">
-                  <Avatar className="h-14 w-14">
-                    <AvatarImage src={user.avatar} className="rounded-full" />
-                  </Avatar>
-                  <CardHeader>
-                    <CardTitle>
-                      {user.firstname} {user.lastname}
-                    </CardTitle>
-                    <CardDescription>{user.email}</CardDescription>
-                  </CardHeader>
-                </Card>
+                <ConfirmationDialog
+                  confirmationFunction={() => addUser(user._id)}
+                  title={`Add this to the project?`}
+                  description={`Are you sure you want to add ${user.firstname} ${user.lastname} to the project?`}
+                  key={user._id}
+                >
+                  <Card className="flex items-center px-4">
+                    <Avatar className="h-14 w-14">
+                      <AvatarImage src={user.avatar} className="rounded-full" />
+                    </Avatar>
+                    <CardHeader>
+                      <CardTitle>
+                        {user.firstname} {user.lastname}
+                      </CardTitle>
+                      <CardDescription>{user.email}</CardDescription>
+                    </CardHeader>
+                  </Card>
+                </ConfirmationDialog>
               ))
             ) : (
               <div className="self-center">No users found</div>

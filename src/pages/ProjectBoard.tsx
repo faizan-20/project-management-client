@@ -123,7 +123,7 @@ function ProjectBoard() {
           placeholder="Search"
           className="px-2 text-base border-slate-200 border-2 max-w-60"
         />
-        <AddUserSheet>
+        <AddUserSheet projectId={projectId}>
           <div className="inline-flex items-center justify-center whitespace-nowrap rounded-sm text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-50 py-2 px-4 bg-slate-100 text-secondary-foreground shadow-sm hover:bg-sky-100/80">
             <svg
               xmlns="http://www.w3.org/2000/svg"
