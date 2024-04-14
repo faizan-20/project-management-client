@@ -15,25 +15,12 @@ export type ProjectsContextType = {
   setFavProjects: Dispatch<SetStateAction<string[]>>;
 };
 
-const defaultState = {
-  projects: [
-    {
-      key: "",
-      title: "",
-      owner: {
-        email: "",
-        firstname: "",
-        accessToken: "",
-      },
-      admins: [],
-      users: [],
-      _id: "",
-    },
-  ],
+const defaultState: ProjectsContextType = {
+  projects: [],
   favProjects: [],
   setProjects: () => {},
   setFavProjects: () => {},
-} as ProjectsContextType;
+};
 
 type ProjectsProviderProps = {
   children: ReactNode;
