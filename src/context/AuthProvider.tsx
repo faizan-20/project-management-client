@@ -8,7 +8,9 @@ import {
 } from "react";
 
 export type User = {
+  _id: string;
   firstname: string;
+  lastname?: string;
   email: string;
   accessToken: string;
   avatar?: string;
@@ -22,6 +24,7 @@ export interface AuthContextInterface {
 
 const defaultState = {
   user: {
+    _id: "",
     firstname: "",
     email: "",
     accessToken: "",
@@ -38,6 +41,7 @@ type AuthProviderProps = {
 
 export default function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User>({
+    _id: "",
     firstname: "",
     email: "",
     accessToken: "",
