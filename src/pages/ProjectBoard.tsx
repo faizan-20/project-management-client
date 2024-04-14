@@ -1,11 +1,18 @@
 import AddUserSheet from "@/components/AddUserSheet";
 import ProgressBoard from "@/components/ProgressBoard";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { Input } from "@/components/ui/input";
 import { ProjectsContext } from "@/context/ProjectsProvider";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { ProjectType } from "@/pages/Home";
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 export type IssueType = {
   _id: string;
@@ -74,9 +81,23 @@ function ProjectBoard() {
 
   return (
     <div className="flex flex-col px-6">
-      <div className="text-gray-600 text-sm tracking-wide">
-        Projects / {currProject?.title}
-      </div>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to="/">Project</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to={`/project/${currProject?._id}/board`}>
+                {currProject?.title}
+              </Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <div className="flex flex-row justify-between">
         <div className="font-semibold py-4 text-2xl">
           {currProject?.key} board
