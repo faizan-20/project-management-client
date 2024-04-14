@@ -89,7 +89,10 @@ export default function ProgressBoard({
   return (
     <div className="flex gap-4 mt-6">
       {["todo", "inprogress", "done"].map((status) => (
-        <div className="bg-slate-100 h-full min-h-32 w-60" key={status}>
+        <div
+          className="bg-slate-100 h-full min-h-32 w-60 rounded-sm px-1"
+          key={status}
+        >
           <div className="text-xs text-gray-500 font-semibold m-4 mt-6">
             {status.toUpperCase()}
           </div>

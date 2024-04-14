@@ -12,10 +12,14 @@ import { useState } from "react";
 
 export function ConfirmationDialog({
   children,
-  deleteProject,
+  confirmationFunction,
+  title,
+  description,
 }: {
   children: React.ReactNode;
-  deleteProject: () => Promise<void>;
+  confirmationFunction: () => Promise<void>;
+  title: string;
+  description?: string;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -24,8 +28,8 @@ export function ConfirmationDialog({
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Are you sure?</DialogTitle>
-          <DialogDescription>This action is permanent</DialogDescription>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <Button variant="outline" onClick={() => setOpen(false)}>
@@ -35,7 +39,7 @@ export function ConfirmationDialog({
             type="submit"
             variant="destructive"
             onClick={() => {
-              deleteProject();
+              confirmationFunction();
               setOpen(false);
             }}
           >
