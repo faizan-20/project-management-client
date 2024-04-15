@@ -8,7 +8,15 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/components/ui/table"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+
 
 function IssuePage() {
   const [showEditor, setShowEditor] = useState(false);
@@ -151,7 +159,18 @@ function IssuePage() {
 
       <div className="w-1/2">
         <div>
-          <Button variant="secondary">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="secondary">Status</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem>To Do</DropdownMenuItem>
+              <DropdownMenuItem>Progress</DropdownMenuItem>
+              <DropdownMenuItem>Done</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* <Button className="bg-slate-200 text-black">
             To Do
             <svg
               viewBox="0 0 24 24"
@@ -175,6 +194,9 @@ function IssuePage() {
               </g>
             </svg>
           </Button>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M12.7071 14.7071C12.3166 15.0976 11.6834 15.0976 11.2929 14.7071L6.29289 9.70711C5.90237 9.31658 5.90237 8.68342 6.29289 8.29289C6.68342 7.90237 7.31658 7.90237 7.70711 8.29289L12 12.5858L16.2929 8.29289C16.6834 7.90237 17.3166 7.90237 17.7071 8.29289C18.0976 8.68342 18.0976 9.31658 17.7071 9.70711L12.7071 14.7071Z" fill="#000000"></path>
+            </g></svg>
+          </Button> */}
         </div>
 
         <div className="w-full mt-3">

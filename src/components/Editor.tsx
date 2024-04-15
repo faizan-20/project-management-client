@@ -1,6 +1,6 @@
-import { SetStateAction, useState } from "react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css"; // import Quill styles
+import { SetStateAction, useState } from 'react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'; 
 
 const Editor = () => {
   const [editorHtml, setEditorHtml] = useState("");
