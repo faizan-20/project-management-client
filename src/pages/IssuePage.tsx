@@ -17,6 +17,7 @@ import {
 import { IssueType } from "./ProjectBoard";
 import { Textarea } from "@/components/ui/textarea";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import { useIssuesStore } from "@/context/store";
 
 function IssuePage({ issue }: { issue: IssueType }) {
   const [currIssue, setCurrIssue] = useState(issue);
@@ -24,6 +25,8 @@ function IssuePage({ issue }: { issue: IssueType }) {
   const [showCommentEditor, setShowCommentEditor] = useState(false);
   const [description, setDescription] = useState("");
   const [comment, setComment] = useState("");
+
+  const setIssueStatus = useIssuesStore((state) => state.setIssueStatus);
 
   const axiosPrivate = useAxiosPrivate();
 
@@ -33,6 +36,7 @@ function IssuePage({ issue }: { issue: IssueType }) {
         status,
       });
       setCurrIssue({ ...currIssue, status });
+      setIssueStatus(currIssue._id, status);
     } catch (error) {
       console.error(error);
     }

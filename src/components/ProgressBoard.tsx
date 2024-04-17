@@ -1,8 +1,8 @@
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import IssueCard from "@/components/IssueCard";
 import { Input } from "./ui/input";
-import { AllIssuesContext } from "@/context/AllIssuesProvider";
+import { useIssuesStore } from "@/context/store";
 
 export default function ProgressBoard({
   issueSearch,
@@ -11,12 +11,17 @@ export default function ProgressBoard({
   issueSearch: string;
   projectId: string | undefined;
 }) {
-  const { allIssues, setAllIssues } = useContext(AllIssuesContext);
+  const { issues, addIssue } = useIssuesStore((state) => ({
+    issues: state.issues,
+    addIssue: state.addIssue,
+  }));
 
   const [visibleSection, setVisibleSection] = useState("");
   const [issueTitle, setIssueTitle] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const axiosPrivate = useAxiosPrivate();
+
+  console.log("progressBoard");
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -51,7 +56,7 @@ export default function ProgressBoard({
           status,
         });
         setIssueTitle("");
-        setAllIssues([...allIssues, data.issue]);
+        addIssue(data.issue);
       } catch (error) {
         console.error(error);
       } finally {
@@ -95,7 +100,7 @@ export default function ProgressBoard({
             {status.toUpperCase()}
           </div>
           <div>
-            {allIssues
+            {issues
               .filter((issue) => {
                 return issueSearch.toLowerCase() === ""
                   ? issue
