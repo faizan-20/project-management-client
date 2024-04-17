@@ -114,7 +114,7 @@ export default function ProgressBoard({
                     <IssueCard
                       key={issue._id}
                       title={issue.title}
-                      issueKey={issue.key}
+                      issue={issue}
                       currIssue={issue}
                     />
                   );

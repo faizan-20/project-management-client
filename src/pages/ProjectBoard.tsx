@@ -22,6 +22,7 @@ export type IssueType = {
   title: string;
   key: string;
   status: string;
+  description?: string;
 };
 
 function ProjectBoard() {

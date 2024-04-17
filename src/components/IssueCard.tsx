@@ -3,19 +3,15 @@ import { IssueDialog } from "./IssueDialog";
 
 function IssueCard({
   title,
-  issueKey,
-  currIssue,
+  issue,
 }: {
   title: string;
-  issueKey: string;
+  issue: IssueType;
   currIssue: IssueType;
 }) {
   return (
-    <IssueDialog>
-      <div
-        className="flex flex-col p-2 m-1 bg-white h-fit rounded-sm border border-slate-300 shadow-md cursor-pointer hover:bg-blue-50 transition-all duration-150"
-        onClick={() => console.log(currIssue)}
-      >
+    <IssueDialog issue={issue}>
+      <div className="flex flex-col p-2 m-1 bg-white h-fit rounded-sm border border-slate-300 shadow-md cursor-pointer hover:bg-blue-50 transition-all duration-150">
         <div className="text-sm pb-4 pl-1">{title}</div>
         <div className="flex items-center">
           <div className="mr-2">
@@ -37,7 +33,7 @@ function IssueCard({
               </g>
             </svg>
           </div>
-          <div className="text-xs font-semibold text-gray-600">{issueKey}</div>
+          <div className="text-xs font-semibold text-gray-600">{issue.key}</div>
         </div>
       </div>
     </IssueDialog>
