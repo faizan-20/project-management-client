@@ -8,6 +8,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Input } from "@/components/ui/input";
+import { AllIssuesContext } from "@/context/AllIssuesProvider";
 import { ProjectsContext } from "@/context/ProjectsProvider";
 import useAuth from "@/hooks/useAuth";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
@@ -34,8 +35,10 @@ function ProjectBoard() {
   const { user } = useAuth();
 
   const [currProject, setCurrProject] = useState<ProjectType>();
-  const [allIssues, setAllIssues] = useState<IssueType[]>([]);
+  // const [allIssues, setAllIssues] = useState<IssueType[]>([]);
   const [issueSearch, setIssueSearch] = useState("");
+
+  const { setAllIssues } = useContext(AllIssuesContext);
 
   useEffect(() => {
     const getCurrProject = async () => {
@@ -58,7 +61,7 @@ function ProjectBoard() {
 
     getCurrProject();
     getAllIssues();
-  }, [projectId, axiosPrivate]);
+  }, [projectId, axiosPrivate, setAllIssues]);
 
   const toggleFavoriteProject = async () => {
     try {
@@ -169,12 +172,7 @@ function ProjectBoard() {
           </AddUserSheet>
         )}
       </div>
-      <ProgressBoard
-        issueSearch={issueSearch}
-        allIssues={allIssues}
-        projectId={projectId}
-        setAllIssues={setAllIssues}
-      />
+      <ProgressBoard issueSearch={issueSearch} projectId={projectId} />
     </div>
   );
 }

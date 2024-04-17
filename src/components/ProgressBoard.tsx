@@ -1,20 +1,18 @@
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import IssueCard from "@/components/IssueCard";
-import { IssueType } from "@/pages/ProjectBoard";
 import { Input } from "./ui/input";
+import { AllIssuesContext } from "@/context/AllIssuesProvider";
 
 export default function ProgressBoard({
   issueSearch,
-  allIssues,
   projectId,
-  setAllIssues,
 }: {
   issueSearch: string;
-  allIssues: IssueType[];
   projectId: string | undefined;
-  setAllIssues: React.Dispatch<React.SetStateAction<IssueType[]>>;
 }) {
+  const { allIssues, setAllIssues } = useContext(AllIssuesContext);
+
   const [visibleSection, setVisibleSection] = useState("");
   const [issueTitle, setIssueTitle] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -110,14 +108,7 @@ export default function ProgressBoard({
               })
               .map((issue) => {
                 if (issue.status === status) {
-                  return (
-                    <IssueCard
-                      key={issue._id}
-                      title={issue.title}
-                      issue={issue}
-                      currIssue={issue}
-                    />
-                  );
+                  return <IssueCard key={issue._id} issue={issue} />;
                 }
               })}
           </div>

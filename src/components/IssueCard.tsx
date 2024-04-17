@@ -1,18 +1,11 @@
 import { IssueType } from "@/pages/ProjectBoard";
 import { IssueDialog } from "./IssueDialog";
 
-function IssueCard({
-  title,
-  issue,
-}: {
-  title: string;
-  issue: IssueType;
-  currIssue: IssueType;
-}) {
+function IssueCard({ issue }: { issue: IssueType }) {
   return (
     <IssueDialog issue={issue}>
       <div className="flex flex-col p-2 m-1 bg-white h-fit rounded-sm border border-slate-300 shadow-md cursor-pointer hover:bg-blue-50 transition-all duration-150">
-        <div className="text-sm pb-4 pl-1">{title}</div>
+        <div className="text-sm pb-4 pl-1">{issue.title}</div>
         <div className="flex items-center">
           <div className="mr-2">
             <svg

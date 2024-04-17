@@ -16,25 +16,45 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { IssueType } from "./ProjectBoard";
 import { Textarea } from "@/components/ui/textarea";
+import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 
 function IssuePage({ issue }: { issue: IssueType }) {
+  const [currIssue, setCurrIssue] = useState(issue);
   const [showEditor, setShowEditor] = useState(false);
   const [showCommentEditor, setShowCommentEditor] = useState(false);
   const [description, setDescription] = useState("");
   const [comment, setComment] = useState("");
 
-  function handleDescriptionClick() {
-    setShowEditor(true);
+  const axiosPrivate = useAxiosPrivate();
+
+  async function handleStatusChange(status: string) {
+    try {
+      await axiosPrivate.post(`/issues/update-status/${currIssue._id}`, {
+        status,
+      });
+      setCurrIssue({ ...currIssue, status });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
-  function handleCommentClick() {
-    setShowCommentEditor(true);
+  async function handleDescription() {
+    try {
+      await axiosPrivate.put(`/issues/update-issue/${currIssue._id}`, {
+        description,
+      });
+
+      setCurrIssue({ ...currIssue, description });
+      setShowEditor(false);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
     <div className="flex p-5">
       <div className="w-1/2">
-        <div className="font-semibold text-2xl pb-2">{issue.title}</div>
+        <div className="font-semibold text-2xl pb-2">{currIssue.title}</div>
         <div className="flex pb-5">
           <div className="pr-2">
             <Button variant="secondary" className="font-semibold">
@@ -104,22 +124,15 @@ function IssuePage({ issue }: { issue: IssueType }) {
           </div>
         </div>
         <div className="pb-9">
-          <div className="font-semibold text-sm">Description:</div>
+          <div className="font-semibold text-sm">Description</div>
           {showEditor ? (
             <div className="mt-2 mr-2">
               <Textarea
-                value={description}
+                value={currIssue.description}
                 onChange={(e) => setDescription(e.target.value)}
               />
               <div className="flex gap-2 mt-2">
-                <Button
-                  onClick={() => {
-                    setDescription(description);
-                    setShowEditor(false);
-                  }}
-                >
-                  Save
-                </Button>
+                <Button onClick={handleDescription}>Save</Button>
                 <Button
                   variant="secondary"
                   onClick={() => setShowEditor(false)}
@@ -128,17 +141,17 @@ function IssuePage({ issue }: { issue: IssueType }) {
                 </Button>
               </div>
             </div>
-          ) : description.length ? (
+          ) : currIssue.description?.length ? (
             <div
               className="text-sm text-gray-700 pb-2 mt-1 cursor-text h-fit whitespace-pre-wrap"
-              onClick={handleDescriptionClick}
+              onClick={() => setShowEditor(true)}
             >
-              {`${description}`}
+              {currIssue.description}
             </div>
           ) : (
             <div
               className="text-gray-500 text-sm"
-              onClick={handleDescriptionClick}
+              onClick={() => setShowEditor(true)}
             >
               Add a description...
             </div>
@@ -166,7 +179,7 @@ function IssuePage({ issue }: { issue: IssueType }) {
           ) : (
             <div
               className="text-gray-500 text-sm border-[1px] py-2 px-4 cursor-text border-slate-500 rounded-sm"
-              onClick={handleCommentClick}
+              onClick={() => setShowCommentEditor(true)}
             >
               Add a comment...
             </div>
@@ -179,7 +192,9 @@ function IssuePage({ issue }: { issue: IssueType }) {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="secondary">
-                <div className="font-bold">{issue.status.toUpperCase()}</div>
+                <div className="font-bold">
+                  {currIssue.status.toUpperCase()}
+                </div>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
@@ -195,11 +210,15 @@ function IssuePage({ issue }: { issue: IssueType }) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="font-semibold">
-              <DropdownMenuItem>To Do</DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleStatusChange("todo")}>
+                To Do
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => handleStatusChange("inprogress")}
+              >
                 <div className="bg-sky-200">In Progress</div>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleStatusChange("done")}>
                 <div className="bg-green-200">Done</div>
               </DropdownMenuItem>
             </DropdownMenuContent>
