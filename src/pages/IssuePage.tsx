@@ -29,16 +29,15 @@ function IssuePage({ issue }: { issue: IssueType }) {
   const { setAllIssues } = useContext(AllIssuesContext);
   const axiosPrivate = useAxiosPrivate();
 
-  async function handleStatusChange(status: string) {
+  async function handleStatusChange(e: Event, status: string) {
+    e.preventDefault();
     try {
       await axiosPrivate.post(`/issues/update-status/${currIssue._id}`, {
         status,
       });
       setCurrIssue({ ...currIssue, status });
       setAllIssues((prev) =>
-        prev.map((issue) =>
-          issue._id === currIssue._id ? { ...issue, status } : issue
-        )
+        prev.map((i) => (i._id === currIssue._id ? { ...i, status } : i))
       );
     } catch (error) {
       console.error(error);
@@ -217,15 +216,15 @@ function IssuePage({ issue }: { issue: IssueType }) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="font-semibold">
-              <DropdownMenuItem onClick={() => handleStatusChange("todo")}>
+              <DropdownMenuItem onSelect={(e) => handleStatusChange(e, "todo")}>
                 To Do
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => handleStatusChange("inprogress")}
+                onSelect={(e) => handleStatusChange(e, "inprogress")}
               >
                 <div className="bg-sky-200">In Progress</div>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleStatusChange("done")}>
+              <DropdownMenuItem onSelect={(e) => handleStatusChange(e, "done")}>
                 <div className="bg-green-200">Done</div>
               </DropdownMenuItem>
             </DropdownMenuContent>
