@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   Table,
   TableBody,
@@ -17,6 +17,7 @@ import {
 import { IssueType } from "./ProjectBoard";
 import { Textarea } from "@/components/ui/textarea";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import { AllIssuesContext } from "@/context/AllIssuesProvider";
 
 function IssuePage({ issue }: { issue: IssueType }) {
   const [currIssue, setCurrIssue] = useState(issue);
@@ -25,6 +26,7 @@ function IssuePage({ issue }: { issue: IssueType }) {
   const [description, setDescription] = useState("");
   const [comment, setComment] = useState("");
 
+  const { setAllIssues } = useContext(AllIssuesContext);
   const axiosPrivate = useAxiosPrivate();
 
   async function handleStatusChange(status: string) {
@@ -33,6 +35,11 @@ function IssuePage({ issue }: { issue: IssueType }) {
         status,
       });
       setCurrIssue({ ...currIssue, status });
+      setAllIssues((prev) =>
+        prev.map((issue) =>
+          issue._id === currIssue._id ? { ...issue, status } : issue
+        )
+      );
     } catch (error) {
       console.error(error);
     }
