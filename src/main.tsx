@@ -42,6 +42,9 @@ const router = createBrowserRouter(
                   path="issue/:issueId"
                   element={<IssuePage/>}
                 />
+                <Route
+                  path="project/:projectId/issues"
+                />
               </Route>
             </Route>
           </Route>
