@@ -20,6 +20,7 @@ import RequireAuth from "./components/RequireAuth.tsx";
 import PersistLogin from "./components/PersistLogin.tsx";
 import Home from "./pages/Home.tsx";
 import IssuePage from "./pages/IssuePage.tsx";
+import UserBoard from "./pages/UsersBoard.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -39,8 +40,12 @@ const router = createBrowserRouter(
                   element={<div>Timeline</div>}
                 />
                 <Route
+                  path="project/:projectId/users"
+                  element={<UserBoard />}
+                />
+                <Route
                   path="issue/:issueId"
-                  element={<IssuePage/>}
+                  element={<IssuePage />}
                 />
               </Route>
             </Route>
