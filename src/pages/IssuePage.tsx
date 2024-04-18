@@ -18,24 +18,29 @@ import { IssueType } from "./ProjectBoard";
 import { Textarea } from "@/components/ui/textarea";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useIssuesStore } from "@/context/store";
+import { useShallow } from "zustand/react/shallow";
 
-function IssuePage({ issue }: { issue: IssueType }) {
+const IssuePage = ({ issue }: { issue: IssueType }) => {
   const [currIssue, setCurrIssue] = useState(issue);
   const [showEditor, setShowEditor] = useState(false);
   const [showCommentEditor, setShowCommentEditor] = useState(false);
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState(currIssue.description);
   const [comment, setComment] = useState("");
 
-  const setIssueStatus = useIssuesStore((state) => state.setIssueStatus);
-
+  const setIssueStatus = useIssuesStore(
+    useShallow((state) => state.setIssueStatus)
+  );
+  const setIssueDescription = useIssuesStore(
+    useShallow((state) => state.setIssueDescription)
+  );
   const axiosPrivate = useAxiosPrivate();
 
-  async function handleStatusChange(status: string) {
+  async function handleStatusChange(e: Event, status: string) {
+    e.preventDefault();
     try {
       await axiosPrivate.post(`/issues/update-status/${currIssue._id}`, {
         status,
       });
-      setCurrIssue({ ...currIssue, status });
       setIssueStatus(currIssue._id, status);
     } catch (error) {
       console.error(error);
@@ -49,6 +54,7 @@ function IssuePage({ issue }: { issue: IssueType }) {
       });
 
       setCurrIssue({ ...currIssue, description });
+      setIssueDescription(currIssue._id, description || "");
       setShowEditor(false);
     } catch (error) {
       console.error(error);
@@ -132,7 +138,7 @@ function IssuePage({ issue }: { issue: IssueType }) {
           {showEditor ? (
             <div className="mt-2 mr-2">
               <Textarea
-                value={currIssue.description}
+                value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
               <div className="flex gap-2 mt-2">
@@ -214,15 +220,15 @@ function IssuePage({ issue }: { issue: IssueType }) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="font-semibold">
-              <DropdownMenuItem onClick={() => handleStatusChange("todo")}>
+              <DropdownMenuItem onSelect={(e) => handleStatusChange(e, "todo")}>
                 To Do
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => handleStatusChange("inprogress")}
+                onSelect={(e) => handleStatusChange(e, "inprogress")}
               >
                 <div className="bg-sky-200">In Progress</div>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleStatusChange("done")}>
+              <DropdownMenuItem onSelect={(e) => handleStatusChange(e, "done")}>
                 <div className="bg-green-200">Done</div>
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -265,6 +271,6 @@ function IssuePage({ issue }: { issue: IssueType }) {
       </div>
     </div>
   );
-}
+};
 
 export default IssuePage;

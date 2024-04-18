@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import IssueCard from "@/components/IssueCard";
 import { Input } from "./ui/input";
 import { useIssuesStore } from "@/context/store";
+import { useShallow } from "zustand/react/shallow";
 
 export default function ProgressBoard({
   issueSearch,
@@ -11,10 +12,8 @@ export default function ProgressBoard({
   issueSearch: string;
   projectId: string | undefined;
 }) {
-  const { issues, addIssue } = useIssuesStore((state) => ({
-    issues: state.issues,
-    addIssue: state.addIssue,
-  }));
+  const issues = useIssuesStore(useShallow((state) => state.issues));
+  const addIssue = useIssuesStore((state) => state.addIssue);
 
   const [visibleSection, setVisibleSection] = useState("");
   const [issueTitle, setIssueTitle] = useState("");

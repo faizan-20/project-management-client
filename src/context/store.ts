@@ -7,6 +7,7 @@ type IssuesStore = {
   addIssue: (issue: IssueType) => void;
   removeIssue: (issueId: string) => void;
   setIssueStatus: (issueId: string, status: string) => void;
+  setIssueDescription: (issueId: string, desc: string) => void;
 };
 
 export const useIssuesStore = create<IssuesStore>((set) => ({
@@ -30,6 +31,13 @@ export const useIssuesStore = create<IssuesStore>((set) => ({
     set((state) => ({
       issues: state.issues.map((issue) =>
         issue._id === issueId ? { ...issue, status } : issue
+      ),
+    }));
+  },
+  setIssueDescription: (issueId, desc) => {
+    set((state) => ({
+      issues: state.issues.map((issue) =>
+        issue._id === issueId ? { ...issue, description: desc } : issue
       ),
     }));
   },
