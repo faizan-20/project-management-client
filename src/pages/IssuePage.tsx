@@ -1,6 +1,5 @@
-import Editor from "@/components/Editor";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   Table,
   TableBody,
@@ -8,38 +7,70 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
+import { IssueType } from "./ProjectBoard";
+import { Textarea } from "@/components/ui/textarea";
+import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import { useIssuesStore } from "@/context/store";
+import { useShallow } from "zustand/react/shallow";
 
-
-
-function IssuePage() {
+const IssuePage = ({ issue }: { issue: IssueType }) => {
+  const [currIssue, setCurrIssue] = useState(issue);
   const [showEditor, setShowEditor] = useState(false);
   const [showCommentEditor, setShowCommentEditor] = useState(false);
+  const [description, setDescription] = useState(currIssue.description);
+  const [comment, setComment] = useState("");
 
-  function handleDescriptionClick() {
-    setShowEditor(true);
+  const setIssueStatus = useIssuesStore(
+    useShallow((state) => state.setIssueStatus)
+  );
+  const setIssueDescription = useIssuesStore(
+    useShallow((state) => state.setIssueDescription)
+  );
+  const axiosPrivate = useAxiosPrivate();
+
+  async function handleStatusChange(e: Event, status: string) {
+    e.preventDefault();
+    try {
+      await axiosPrivate.post(`/issues/update-status/${currIssue._id}`, {
+        status,
+      });
+      setIssueStatus(currIssue._id, status);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
-  function handleCommentClick() {
-    setShowCommentEditor(true);
+  async function handleDescription() {
+    try {
+      await axiosPrivate.put(`/issues/update-issue/${currIssue._id}`, {
+        description,
+      });
+
+      setCurrIssue({ ...currIssue, description });
+      setIssueDescription(currIssue._id, description || "");
+      setShowEditor(false);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
     <div className="flex p-5">
       <div className="w-1/2">
-        <div className="font-semibold text-2xl pb-2">Issue Name</div>
+        <div className="font-semibold text-2xl pb-2">{currIssue.title}</div>
         <div className="flex pb-5">
           <div className="pr-2">
-            <Button variant="secondary">
+            <Button variant="secondary" className="font-semibold">
               <svg
                 viewBox="0 0 28 28"
-                className="w-5 h-5"
+                className="w-5 h-5 mr-1"
                 version="1.1"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="#000000"
@@ -53,12 +84,7 @@ function IssuePage() {
                 <g id="SVGRepo_iconCarrier">
                   {" "}
                   <title>attachment-2</title>
-                  <g
-                    id="Page-1"
-                    strokeWidth="2"
-                    fill="none"
-                    fillRule="evenodd"
-                  >
+                  <g id="Page-1" strokeWidth="2" fill="none" fillRule="evenodd">
                     <g
                       id="Icon-Set"
                       transform="translate(-258.000000, -154.000000)"
@@ -74,7 +100,7 @@ function IssuePage() {
                   </g>{" "}
                 </g>
               </svg>
-              Attach
+              <div>Attach</div>
             </Button>
           </div>
           <div className="pr-2">
@@ -84,7 +110,7 @@ function IssuePage() {
             <Button variant="secondary">
               <svg
                 viewBox="0 0 24 24"
-                className="w-7 h-7"
+                className="w-7 h-7 mr-1"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
@@ -107,14 +133,16 @@ function IssuePage() {
             </Button>
           </div>
         </div>
-
         <div className="pb-9">
-          <div className="font-semibold text-gray-700 pb-2">Description</div>
+          <div className="font-semibold text-sm">Description</div>
           {showEditor ? (
-            <div>
-              <Editor />
+            <div className="mt-2 mr-2">
+              <Textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
               <div className="flex gap-2 mt-2">
-                <Button>Save</Button>
+                <Button onClick={handleDescription}>Save</Button>
                 <Button
                   variant="secondary"
                   onClick={() => setShowEditor(false)}
@@ -123,21 +151,30 @@ function IssuePage() {
                 </Button>
               </div>
             </div>
+          ) : currIssue.description?.length ? (
+            <div
+              className="text-sm text-gray-700 pb-2 mt-1 cursor-text h-fit whitespace-pre-wrap"
+              onClick={() => setShowEditor(true)}
+            >
+              {currIssue.description}
+            </div>
           ) : (
             <div
               className="text-gray-500 text-sm"
-              onClick={handleDescriptionClick}
+              onClick={() => setShowEditor(true)}
             >
               Add a description...
             </div>
           )}
         </div>
-
-        <div>
-          <div className="font-semibold text-gray-700 pb-3">Activity</div>
+        <div className="mr-4">
+          <div className="font-semibold text-sm mb-2">Activity</div>
           {showCommentEditor ? (
             <div>
-              <Editor />
+              <Textarea
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+              />
 
               <div className="flex gap-2 mt-2">
                 <Button>Save</Button>
@@ -150,7 +187,10 @@ function IssuePage() {
               </div>
             </div>
           ) : (
-            <div className="text-gray-500 text-sm" onClick={handleCommentClick}>
+            <div
+              className="text-gray-500 text-sm border-[1px] py-2 px-4 cursor-text border-slate-500 rounded-sm"
+              onClick={() => setShowCommentEditor(true)}
+            >
               Add a comment...
             </div>
           )}
@@ -161,42 +201,38 @@ function IssuePage() {
         <div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="secondary">Status</Button>
+              <Button variant="secondary">
+                <div className="font-bold">
+                  {currIssue.status.toUpperCase()}
+                </div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className="w-5 h-5 font-bold ml-1"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem>To Do</DropdownMenuItem>
-              <DropdownMenuItem>Progress</DropdownMenuItem>
-              <DropdownMenuItem>Done</DropdownMenuItem>
+            <DropdownMenuContent className="font-semibold">
+              <DropdownMenuItem onSelect={(e) => handleStatusChange(e, "todo")}>
+                To Do
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onSelect={(e) => handleStatusChange(e, "inprogress")}
+              >
+                <div className="bg-sky-200">In Progress</div>
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={(e) => handleStatusChange(e, "done")}>
+                <div className="bg-green-200">Done</div>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-
-          {/* <Button className="bg-slate-200 text-black">
-            To Do
-            <svg
-              viewBox="0 0 24 24"
-              className="w-4 h-4"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-              <g
-                id="SVGRepo_tracerCarrier"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              ></g>
-              <g id="SVGRepo_iconCarrier">
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M12.7071 14.7071C12.3166 15.0976 11.6834 15.0976 11.2929 14.7071L6.29289 9.70711C5.90237 9.31658 5.90237 8.68342 6.29289 8.29289C6.68342 7.90237 7.31658 7.90237 7.70711 8.29289L12 12.5858L16.2929 8.29289C16.6834 7.90237 17.3166 7.90237 17.7071 8.29289C18.0976 8.68342 18.0976 9.31658 17.7071 9.70711L12.7071 14.7071Z"
-                  fill="#000000"
-                ></path>
-              </g>
-            </svg>
-          </Button>
-                <path fillRule="evenodd" clipRule="evenodd" d="M12.7071 14.7071C12.3166 15.0976 11.6834 15.0976 11.2929 14.7071L6.29289 9.70711C5.90237 9.31658 5.90237 8.68342 6.29289 8.29289C6.68342 7.90237 7.31658 7.90237 7.70711 8.29289L12 12.5858L16.2929 8.29289C16.6834 7.90237 17.3166 7.90237 17.7071 8.29289C18.0976 8.68342 18.0976 9.31658 17.7071 9.70711L12.7071 14.7071Z" fill="#000000"></path>
-            </g></svg>
-          </Button> */}
         </div>
 
         <div className="w-full mt-3">
@@ -235,6 +271,6 @@ function IssuePage() {
       </div>
     </div>
   );
-}
+};
 
 export default IssuePage;

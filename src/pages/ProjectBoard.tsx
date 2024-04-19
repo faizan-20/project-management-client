@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Input } from "@/components/ui/input";
 import { ProjectsContext } from "@/context/ProjectsProvider";
+import { useIssuesStore } from "@/context/store";
 import useAuth from "@/hooks/useAuth";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { ProjectType } from "@/pages/Home";
@@ -22,6 +23,7 @@ export type IssueType = {
   title: string;
   key: string;
   status: string;
+  description?: string;
 };
 
 function ProjectBoard() {
@@ -33,9 +35,11 @@ function ProjectBoard() {
   const { user } = useAuth();
 
   const [currProject, setCurrProject] = useState<ProjectType>();
-  const [allIssues, setAllIssues] = useState<IssueType[]>([]);
   const [issueSearch, setIssueSearch] = useState("");
 
+  const setIssues = useIssuesStore((state) => state.setIssues);
+
+  console.log("projectBoard");
   useEffect(() => {
     const getCurrProject = async () => {
       try {
@@ -49,7 +53,7 @@ function ProjectBoard() {
     const getAllIssues = async () => {
       try {
         const { data } = await axiosPrivate.get(`/issues/get-all/${projectId}`);
-        setAllIssues(data.issues);
+        setIssues(data.issues);
       } catch (error) {
         console.error(error);
       }
@@ -57,7 +61,7 @@ function ProjectBoard() {
 
     getCurrProject();
     getAllIssues();
-  }, [projectId, axiosPrivate]);
+  }, [projectId, axiosPrivate, setIssues]);
 
   const toggleFavoriteProject = async () => {
     try {
@@ -168,12 +172,7 @@ function ProjectBoard() {
           </AddUserSheet>
         )}
       </div>
-      <ProgressBoard
-        issueSearch={issueSearch}
-        allIssues={allIssues}
-        projectId={projectId}
-        setAllIssues={setAllIssues}
-      />
+      <ProgressBoard issueSearch={issueSearch} projectId={projectId} />
     </div>
   );
 }

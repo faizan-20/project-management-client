@@ -51,7 +51,6 @@ export default function Home() {
         <Input
           type="text"
           placeholder="Search by Name or Lead"
-          className="text-sm border-slate-400 border-2"
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
