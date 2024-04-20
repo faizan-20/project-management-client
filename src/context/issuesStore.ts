@@ -34,7 +34,7 @@ export const useIssuesStore = create<IssuesStore>((set) => ({
   },
   addChildIssue: (issue) => {
     set((state) => ({
-      childIssues: [issue, ...state.issues],
+      childIssues: [issue, ...state.childIssues],
     }));
   },
   removeIssue: (issueId) => {
@@ -44,7 +44,7 @@ export const useIssuesStore = create<IssuesStore>((set) => ({
   },
   removeChildIssue: (issueId) => {
     set((state) => ({
-      childIssues: state.issues.filter((i) => i._id !== issueId),
+      childIssues: state.childIssues.filter((i) => i._id !== issueId),
     }));
   },
   setIssueStatus: (issueId, status) => {

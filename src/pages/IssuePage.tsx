@@ -76,9 +76,15 @@ const IssuePage = ({ issue }: { issue: IssueType }) => {
       <div className="w-[40vw]">
         <Breadcrumb>
           <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink>Parent</BreadcrumbLink>
-            </BreadcrumbItem>
+            {currIssue.parent ? (
+              <BreadcrumbItem>
+                <BreadcrumbLink>{currIssue.parent.key}</BreadcrumbLink>
+              </BreadcrumbItem>
+            ) : (
+              <BreadcrumbItem>
+                <BreadcrumbLink>Add parent</BreadcrumbLink>
+              </BreadcrumbItem>
+            )}
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink>{currIssue.key}</BreadcrumbLink>

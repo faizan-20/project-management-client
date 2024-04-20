@@ -13,7 +13,7 @@ export function IssueDialog({
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="min-w-[65vw] min-h-[60vh] top-[40%] max-h-[70vh]">
+      <DialogContent className="min-w-[65vw] min-h-[60vh] top-[40%] max-h-[70vh] overflow-auto">
         <IssuePage issue={issue} />
       </DialogContent>
     </Dialog>
