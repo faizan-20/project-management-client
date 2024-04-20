@@ -9,10 +9,9 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Input } from "@/components/ui/input";
 import { ProjectsContext } from "@/context/ProjectsProvider";
-import { useIssuesStore } from "@/context/store";
+import { useIssuesStore } from "@/context/issuesStore";
 import useAuth from "@/hooks/useAuth";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import { ProjectType } from "@/pages/Home";
 import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
@@ -24,22 +23,22 @@ export type IssueType = {
   key: string;
   status: string;
   description?: string;
+  childIssues?: IssueType[];
 };
 
 function ProjectBoard() {
   const { projectId } = useParams<{ projectId: string }>();
 
   const axiosPrivate = useAxiosPrivate();
+  const { favProjects, setFavProjects, currProject, setCurrProject } =
+    useContext(ProjectsContext);
 
-  const { favProjects, setFavProjects } = useContext(ProjectsContext);
   const { user } = useAuth();
 
-  const [currProject, setCurrProject] = useState<ProjectType>();
   const [issueSearch, setIssueSearch] = useState("");
 
   const setIssues = useIssuesStore((state) => state.setIssues);
 
-  console.log("projectBoard");
   useEffect(() => {
     const getCurrProject = async () => {
       try {
@@ -61,7 +60,7 @@ function ProjectBoard() {
 
     getCurrProject();
     getAllIssues();
-  }, [projectId, axiosPrivate, setIssues]);
+  }, [projectId, axiosPrivate, setIssues, setCurrProject]);
 
   const toggleFavoriteProject = async () => {
     try {

@@ -2,7 +2,7 @@ import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useEffect, useRef, useState } from "react";
 import IssueCard from "@/components/IssueCard";
 import { Input } from "./ui/input";
-import { useIssuesStore } from "@/context/store";
+import { useIssuesStore } from "@/context/issuesStore";
 import { useShallow } from "zustand/react/shallow";
 
 export default function ProgressBoard({
@@ -19,8 +19,6 @@ export default function ProgressBoard({
   const [issueTitle, setIssueTitle] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const axiosPrivate = useAxiosPrivate();
-
-  console.log("progressBoard");
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

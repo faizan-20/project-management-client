@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import {
   Table,
   TableBody,
@@ -17,8 +17,16 @@ import {
 import { IssueType } from "./ProjectBoard";
 import { Textarea } from "@/components/ui/textarea";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import { useIssuesStore } from "@/context/store";
+import { useIssuesStore } from "@/context/issuesStore";
 import { useShallow } from "zustand/react/shallow";
+import ChildIssues from "@/components/ChildIssues";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 const IssuePage = ({ issue }: { issue: IssueType }) => {
   const [currIssue, setCurrIssue] = useState(issue);
@@ -26,6 +34,8 @@ const IssuePage = ({ issue }: { issue: IssueType }) => {
   const [showCommentEditor, setShowCommentEditor] = useState(false);
   const [description, setDescription] = useState(currIssue.description);
   const [comment, setComment] = useState("");
+
+  const [isInputVisible, setIsInputVisible] = useState(false); // set add child issue visibility
 
   const setIssueStatus = useIssuesStore(
     useShallow((state) => state.setIssueStatus)
@@ -63,8 +73,21 @@ const IssuePage = ({ issue }: { issue: IssueType }) => {
 
   return (
     <div className="flex p-5">
-      <div className="w-1/2">
-        <div className="font-semibold text-2xl pb-2">{currIssue.title}</div>
+      <div className="w-[40vw]">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink>Parent</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink>{currIssue.key}</BreadcrumbLink>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <div className="font-semibold text-2xl mb-2 mt-2">
+          {currIssue.title}
+        </div>
         <div className="flex pb-5">
           <div className="pr-2">
             <Button variant="secondary" className="font-semibold">
@@ -104,7 +127,9 @@ const IssuePage = ({ issue }: { issue: IssueType }) => {
             </Button>
           </div>
           <div className="pr-2">
-            <Button variant="secondary">Add a Child Issue</Button>
+            <Button variant="secondary" onClick={() => setIsInputVisible(true)}>
+              Add a Child Issue
+            </Button>
           </div>
           <div>
             <Button variant="secondary">
@@ -133,7 +158,7 @@ const IssuePage = ({ issue }: { issue: IssueType }) => {
             </Button>
           </div>
         </div>
-        <div className="pb-9">
+        <div className="mb-9">
           <div className="font-semibold text-sm">Description</div>
           {showEditor ? (
             <div className="mt-2 mr-2">
@@ -166,6 +191,14 @@ const IssuePage = ({ issue }: { issue: IssueType }) => {
               Add a description...
             </div>
           )}
+        </div>
+        <div>
+          <ChildIssues
+            currIssue={currIssue}
+            isInputVisible={isInputVisible}
+            setIsInputVisible={setIsInputVisible}
+            setCurrIssue={setCurrIssue}
+          />
         </div>
         <div className="mr-4">
           <div className="font-semibold text-sm mb-2">Activity</div>

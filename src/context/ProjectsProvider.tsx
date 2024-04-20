@@ -13,6 +13,8 @@ export type ProjectsContextType = {
   favProjects: string[];
   setProjects: Dispatch<SetStateAction<ProjectType[]>>;
   setFavProjects: Dispatch<SetStateAction<string[]>>;
+  currProject: ProjectType | null;
+  setCurrProject: Dispatch<SetStateAction<ProjectType | null>>;
 };
 
 const defaultState: ProjectsContextType = {
@@ -20,6 +22,8 @@ const defaultState: ProjectsContextType = {
   favProjects: [],
   setProjects: () => {},
   setFavProjects: () => {},
+  currProject: null,
+  setCurrProject: () => {},
 };
 
 type ProjectsProviderProps = {
@@ -35,10 +39,20 @@ const ProjectsProvider = ({ children }: ProjectsProviderProps) => {
   const [favProjects, setFavProjects] = useState<string[]>(
     defaultState.favProjects
   );
+  const [currProject, setCurrProject] = useState<ProjectType | null>(
+    defaultState.currProject
+  );
 
   return (
     <ProjectsContext.Provider
-      value={{ projects, favProjects, setProjects, setFavProjects }}
+      value={{
+        projects,
+        favProjects,
+        setProjects,
+        setFavProjects,
+        currProject,
+        setCurrProject,
+      }}
     >
       {children}
     </ProjectsContext.Provider>
