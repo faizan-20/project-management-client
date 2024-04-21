@@ -61,7 +61,7 @@ export default function ChildIssues({
   };
 
   return childIssues.length || isInputVisible ? (
-    <div className="mb-9 flex flex-col mr-2">
+    <div className="mb-9 flex flex-col">
       <div className="font-semibold text-sm mb-2 flex flex-col gap-1">
         Child issues
       </div>

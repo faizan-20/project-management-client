@@ -53,6 +53,18 @@ export default function IssueComments({
       console.error(error);
     } finally {
       setShowCommentEditor(false);
+      setComment("");
+    }
+  };
+
+  const deleteComment = async (commentId: string) => {
+    try {
+      await axiosPrivate.delete(`/comments/${commentId}`);
+      setAllComments(
+        allComments.filter((comment) => comment._id !== commentId)
+      );
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -98,7 +110,11 @@ export default function IssueComments({
                 <div className="font-semibold">{comment.userId.firstname}</div>
                 <div>{comment.text}</div>
               </div>
-              <Button size="sm" variant="ghost">
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => deleteComment(comment._id)}
+              >
                 Delete
               </Button>
             </div>
