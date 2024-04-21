@@ -24,7 +24,7 @@ export type IssueType = {
   status: string;
   description?: string;
   childIssues?: IssueType[];
-  parent?: IssueType;
+  parentIssue?: IssueType;
 };
 
 function ProjectBoard() {

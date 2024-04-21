@@ -18,7 +18,6 @@ import { IssueType } from "./ProjectBoard";
 import { Textarea } from "@/components/ui/textarea";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useIssuesStore } from "@/context/issuesStore";
-import { useShallow } from "zustand/react/shallow";
 import ChildIssues from "@/components/ChildIssues";
 import {
   Breadcrumb,
@@ -27,22 +26,21 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import IssueComments from "@/components/IssueComments";
 
 const IssuePage = ({ issue }: { issue: IssueType }) => {
   const [currIssue, setCurrIssue] = useState(issue);
   const [showEditor, setShowEditor] = useState(false);
   const [showCommentEditor, setShowCommentEditor] = useState(false);
   const [description, setDescription] = useState(currIssue.description);
-  const [comment, setComment] = useState("");
 
   const [isInputVisible, setIsInputVisible] = useState(false); // set add child issue visibility
 
-  const setIssueStatus = useIssuesStore(
-    useShallow((state) => state.setIssueStatus)
-  );
+  const setIssueStatus = useIssuesStore((state) => state.setIssueStatus);
   const setIssueDescription = useIssuesStore(
-    useShallow((state) => state.setIssueDescription)
+    (state) => state.setIssueDescription
   );
+
   const axiosPrivate = useAxiosPrivate();
 
   async function handleStatusChange(e: Event, status: string) {
@@ -76,9 +74,16 @@ const IssuePage = ({ issue }: { issue: IssueType }) => {
       <div className="w-[40vw]">
         <Breadcrumb>
           <BreadcrumbList>
-            {currIssue.parent ? (
+            {currIssue.parentIssue ? (
               <BreadcrumbItem>
-                <BreadcrumbLink>{currIssue.parent.key}</BreadcrumbLink>
+                <BreadcrumbLink
+                  onClick={() =>
+                    setCurrIssue(currIssue.parentIssue || currIssue)
+                  }
+                  className="cursor-pointer"
+                >
+                  {currIssue.parentIssue.key}
+                </BreadcrumbLink>
               </BreadcrumbItem>
             ) : (
               <BreadcrumbItem>
@@ -206,34 +211,11 @@ const IssuePage = ({ issue }: { issue: IssueType }) => {
             setCurrIssue={setCurrIssue}
           />
         </div>
-        <div className="mr-4">
-          <div className="font-semibold text-sm mb-2">Activity</div>
-          {showCommentEditor ? (
-            <div>
-              <Textarea
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-              />
-
-              <div className="flex gap-2 mt-2">
-                <Button>Save</Button>
-                <Button
-                  variant="secondary"
-                  onClick={() => setShowCommentEditor(false)}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <div
-              className="text-gray-500 text-sm border-[1px] py-2 px-4 cursor-text border-slate-500 rounded-sm"
-              onClick={() => setShowCommentEditor(true)}
-            >
-              Add a comment...
-            </div>
-          )}
-        </div>
+        <IssueComments
+          showCommentEditor={showCommentEditor}
+          setShowCommentEditor={setShowCommentEditor}
+          currIssue={currIssue}
+        />
       </div>
 
       <div className="w-1/2">
