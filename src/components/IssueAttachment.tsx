@@ -1,9 +1,19 @@
+import { useRef, useState } from "react";
 import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 
 export default function IssueAttachment() {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [attachment, setAttachment] = useState<File | undefined>();
+
   return (
     <div className="pr-2">
-      <Button variant="secondary" className="font-semibold">
+      <Button
+        variant="secondary"
+        className="font-semibold"
+        onClick={() => fileInputRef.current?.click()}
+      >
         <svg
           viewBox="0 0 28 28"
           className="w-5 h-5 mr-1"
@@ -38,6 +48,14 @@ export default function IssueAttachment() {
         </svg>
         <div>Attach</div>
       </Button>
+      <Input
+        type="file"
+        className="hidden"
+        ref={fileInputRef}
+        onChange={(e) =>
+          setAttachment(e.target.files ? e.target.files[0] : undefined)
+        }
+      />
     </div>
   );
 }

@@ -174,6 +174,9 @@ const IssuePage = ({ issue }: { issue: IssueType }) => {
             </Button>
           </div>
         </div>
+        <div>
+          <div>{currIssue.attachment?.originalName}</div>
+        </div>
         <div className="mb-9">
           <div className="font-semibold text-sm">Description</div>
           {showEditor ? (
