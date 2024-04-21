@@ -9,9 +9,9 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Input } from "@/components/ui/input";
 import { ProjectsContext } from "@/context/ProjectsProvider";
+import { useIssuesStore } from "@/context/issuesStore";
 import useAuth from "@/hooks/useAuth";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import { ProjectType } from "@/pages/Home";
 import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
@@ -22,19 +22,23 @@ export type IssueType = {
   title: string;
   key: string;
   status: string;
+  description?: string;
+  childIssues?: IssueType[];
+  parent?: IssueType;
 };
 
 function ProjectBoard() {
   const { projectId } = useParams<{ projectId: string }>();
 
   const axiosPrivate = useAxiosPrivate();
+  const { favProjects, setFavProjects, currProject, setCurrProject } =
+    useContext(ProjectsContext);
 
-  const { favProjects, setFavProjects } = useContext(ProjectsContext);
   const { user } = useAuth();
 
-  const [currProject, setCurrProject] = useState<ProjectType>();
-  const [allIssues, setAllIssues] = useState<IssueType[]>([]);
   const [issueSearch, setIssueSearch] = useState("");
+
+  const setIssues = useIssuesStore((state) => state.setIssues);
 
   useEffect(() => {
     const getCurrProject = async () => {
@@ -49,7 +53,7 @@ function ProjectBoard() {
     const getAllIssues = async () => {
       try {
         const { data } = await axiosPrivate.get(`/issues/get-all/${projectId}`);
-        setAllIssues(data.issues);
+        setIssues(data.issues);
       } catch (error) {
         console.error(error);
       }
@@ -57,7 +61,7 @@ function ProjectBoard() {
 
     getCurrProject();
     getAllIssues();
-  }, [projectId, axiosPrivate]);
+  }, [projectId, axiosPrivate, setIssues, setCurrProject]);
 
   const toggleFavoriteProject = async () => {
     try {
@@ -168,12 +172,7 @@ function ProjectBoard() {
           </AddUserSheet>
         )}
       </div>
-      <ProgressBoard
-        issueSearch={issueSearch}
-        allIssues={allIssues}
-        projectId={projectId}
-        setAllIssues={setAllIssues}
-      />
+      <ProgressBoard issueSearch={issueSearch} projectId={projectId} />
     </div>
   );
 }

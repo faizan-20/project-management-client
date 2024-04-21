@@ -74,9 +74,9 @@ export default function Header() {
               />
             </svg>
           </div>
-          <div className="text-base text-slate-600 hover:cursor-pointer hover:bg-slate-300 px-2 py-1 transition-all rounded-sm">
-            <div className="w-6 h-6">
-              <ProfileDrawer>
+          <ProfileDrawer>
+            <div className="text-base text-slate-600 hover:cursor-pointer hover:bg-slate-300 px-2 py-1 transition-all rounded-sm">
+              <div className="w-6 h-6">
                 <Avatar onClick={() => setOpen(!open)}>
                   <AvatarImage
                     className="rounded-full"
@@ -89,9 +89,9 @@ export default function Header() {
                       : ""}
                   </AvatarFallback>
                 </Avatar>
-              </ProfileDrawer>
+              </div>
             </div>
-          </div>
+          </ProfileDrawer>
         </div>
       </div>
     </div>

@@ -21,6 +21,7 @@ import PersistLogin from "./components/PersistLogin.tsx";
 import Home from "./pages/Home.tsx";
 import IssuePage from "./pages/IssuePage.tsx";
 import UserBoard from "./pages/UsersBoard.tsx";
+import AllIssuesProvider from "./context/AllIssuesProvider.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -43,10 +44,10 @@ const router = createBrowserRouter(
                   path="project/:projectId/users"
                   element={<UserBoard />}
                 />
-                <Route
+                {/* <Route
                   path="issue/:issueId"
                   element={<IssuePage />}
-                />
+                /> */}
               </Route>
             </Route>
           </Route>
@@ -63,7 +64,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <AuthProvider>
       <ProjectsProvider>
-        <RouterProvider router={router} />
+        <AllIssuesProvider>
+          <RouterProvider router={router} />
+        </AllIssuesProvider>
       </ProjectsProvider>
     </AuthProvider>
     <Toaster />

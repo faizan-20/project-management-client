@@ -1,26 +1,10 @@
-import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import { ProjectType } from "@/pages/Home";
-import { useEffect, useState } from "react";
+import { ProjectsContext } from "@/context/ProjectsProvider";
+import { useContext } from "react";
 import { NavLink, useParams } from "react-router-dom";
 
 function Sidebar() {
   const { projectId } = useParams();
-  const axiosPrivate = useAxiosPrivate();
-
-  const [currProject, setCurrProject] = useState<ProjectType>();
-
-  useEffect(() => {
-    const getCurrProject = async () => {
-      try {
-        const { data } = await axiosPrivate.get(`/projects/${projectId}`);
-        setCurrProject(data.project);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    getCurrProject();
-  }, [projectId, axiosPrivate]);
+  const { currProject } = useContext(ProjectsContext);
 
   return (
     <>

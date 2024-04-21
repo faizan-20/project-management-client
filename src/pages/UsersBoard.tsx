@@ -10,11 +10,36 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import UserCard from "@/components/UserCard";
+import { useContext, useEffect, useState } from "react";
+import { ProjectsContext } from "@/context/ProjectsProvider";
+import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import { User } from "@/context/AuthProvider";
 
 
 
 function UserBoard() {
 
+    const { currProject } = useContext(ProjectsContext);
+    const owner = currProject?.owner;
+    const admins = currProject?.admins;
+    const users = currProject?.users;
+
+    const [otherUsers, setOtherUsers] = useState<User[]>();
+
+    const axiosPrivate = useAxiosPrivate();
+
+    useEffect(() => {
+        const getAllUsers = async () => {
+            try {
+                const { data } = await axiosPrivate.get(`/projects/get-all-not-project-user/${currProject?._id}`);                
+                setOtherUsers(data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        getAllUsers();
+    }, [axiosPrivate]);
 
     return (
         <div className="flex flex-col px-6 overflow-auto">
@@ -28,15 +53,15 @@ function UserBoard() {
                     <BreadcrumbSeparator />
                     <BreadcrumbItem>
                         <BreadcrumbLink asChild>
-                            {/* <Link to={`/project/${currProject?._id}/board`}>
+                            <Link to={`/project/${currProject?._id}/board`}>
                                 {currProject?.title}
-                            </Link> */}
+                            </Link>
                         </BreadcrumbLink>
                     </BreadcrumbItem>
                 </BreadcrumbList>
             </Breadcrumb>
             <div className="font-semibold py-4 text-2xl">
-                Users
+                Project Users
             </div>
             <div className="flex justify-between">
                 <Input
@@ -71,9 +96,62 @@ function UserBoard() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-8 my-4">
                 {/* --------------------- OWNER ------------------- */}
-                <UserCard />
+                <UserCard
+                    key={owner?._id}
+                    firstname={owner?.firstname}
+                    email={owner?.email}
+                    avatar={owner?.avatar}
+                    role={"Owner"}
+                />
+
+                {/* --------------------- ADMIN ------------------- */}
+                {admins?.map((admin) => {
+                    if (owner?._id !== admin._id) {
+                        return (
+                            <UserCard
+                                key={admin?._id}
+                                firstname={admin?.firstname}
+                                email={admin?.email}
+                                avatar={admin?.avatar}
+                                role={"Admin"}
+                            />
+                        )
+                    }
+                })}
+
+                {/* --------------------- USERS ------------------- */}
+                {users?.map((user) => {
+                    return (
+                        <UserCard
+                            key={user?._id}
+                            firstname={user?.firstname}
+                            email={user?.email}
+                            avatar={user?.avatar}
+                            role={"User"}
+                        />
+                    )
+                })}
             </div>
 
+            <hr />
+            <div className="font-semibold py-4 text-2xl">
+                Other Users
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-8 my-4">
+                {/* --------------------- OTHER USERS ------------------- */}
+                {otherUsers?.map((user) => {
+                    return (
+                        <UserCard
+                            key={user?._id}
+                            firstname={user?.firstname}
+                            email={user?.email}
+                            avatar={user?.avatar}
+                            role={""}
+                        />
+                    )
+                })}
+            </div>
         </div>
     )
 }
