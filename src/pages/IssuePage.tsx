@@ -29,6 +29,7 @@ import {
 import IssueComments from "@/components/IssueComments";
 import IssueAttachment from "@/components/IssueAttachment";
 import { ConfirmationDialog } from "@/components/ConfirmationDialog";
+import AttachedFileList from "@/components/AttachedFileList";
 
 const IssuePage = ({ issue }: { issue: IssueType }) => {
   const [currIssue, setCurrIssue] = useState(issue);
@@ -140,8 +141,8 @@ const IssuePage = ({ issue }: { issue: IssueType }) => {
             </Button>
           </ConfirmationDialog>
         </div>
-        <div className="flex pb-5">
-          <IssueAttachment />
+        <div className="flex mb-2">
+          <IssueAttachment currIssue={currIssue} />
           <div className="pr-2">
             <Button variant="secondary" onClick={() => setIsInputVisible(true)}>
               Add a Child Issue
@@ -174,9 +175,7 @@ const IssuePage = ({ issue }: { issue: IssueType }) => {
             </Button>
           </div>
         </div>
-        <div>
-          <div>{currIssue.attachment?.originalName}</div>
-        </div>
+        <AttachedFileList currIssue={currIssue} />
         <div className="mb-9">
           <div className="font-semibold text-sm">Description</div>
           {showEditor ? (
@@ -197,7 +196,7 @@ const IssuePage = ({ issue }: { issue: IssueType }) => {
             </div>
           ) : currIssue.description?.length ? (
             <div
-              className="text-sm text-gray-700 pb-2 mt-1 cursor-text h-fit whitespace-pre-wrap"
+              className="text-sm text-gray-700 mb-2 mt-1 cursor-text h-fit whitespace-pre-wrap"
               onClick={() => setShowEditor(true)}
             >
               {currIssue.description}
@@ -278,24 +277,32 @@ const IssuePage = ({ issue }: { issue: IssueType }) => {
                 <TableCell className=" text-gray-600">Unassigned</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell className=" text-gray-600">Labels</TableCell>
-                <TableCell className=" text-gray-600">Unassigned</TableCell>
-              </TableRow>
-              <TableRow>
                 <TableCell className=" text-gray-600">Parent</TableCell>
-                <TableCell className=" text-gray-600">Unassigned</TableCell>
+                {currIssue.parentIssue ? (
+                  <TableCell className=" text-gray-600">
+                    {currIssue.parentIssue.title}
+                  </TableCell>
+                ) : (
+                  <TableCell className=" text-gray-600">Unassigned</TableCell>
+                )}
               </TableRow>
               <TableRow>
                 <TableCell className=" text-gray-600">Reporter</TableCell>
-                <TableCell className=" text-gray-600">Unassigned</TableCell>
+                <TableCell className=" text-gray-600">
+                  {currIssue.createdBy?.firstname}
+                </TableCell>
               </TableRow>
             </TableBody>
           </Table>
         </div>
 
         <div className="mt-4 pl-3">
-          <div className=" text-gray-400 text-xs">Updated At</div>
-          <div className="text-gray-400 text-xs">Created At</div>
+          <div className=" text-gray-400 text-xs">
+            Updated At: {currIssue.updatedAt}
+          </div>
+          <div className="text-gray-400 text-xs">
+            Created At: {currIssue.updatedAt}
+          </div>
         </div>
       </div>
     </div>

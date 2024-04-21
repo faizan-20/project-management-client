@@ -1,11 +1,39 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import { axiosPrivate } from "@/api/axios";
+import { IssueType } from "@/pages/ProjectBoard";
+import { useAttachmentStore } from "@/context/attachmentStore";
 
-export default function IssueAttachment() {
+export default function IssueAttachment({
+  currIssue,
+}: {
+  currIssue: IssueType;
+}) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [attachment, setAttachment] = useState<File | undefined>();
+  const setAttachment = useAttachmentStore((state) => state.setAttachment);
+
+  const attachFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const fileUploaded = e.target.files ? e.target.files[0] : undefined;
+
+    try {
+      await axiosPrivate.post(
+        `/issues/add-attachment/${currIssue._id}`,
+        {
+          file: fileUploaded,
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      setAttachment(e.target.files ? e.target.files[0].name : undefined);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div className="pr-2">
@@ -52,9 +80,7 @@ export default function IssueAttachment() {
         type="file"
         className="hidden"
         ref={fileInputRef}
-        onChange={(e) =>
-          setAttachment(e.target.files ? e.target.files[0] : undefined)
-        }
+        onChange={attachFile}
       />
     </div>
   );

@@ -8,6 +8,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Input } from "@/components/ui/input";
+import { User } from "@/context/AuthProvider";
 import { ProjectsContext } from "@/context/ProjectsProvider";
 import { useIssuesStore } from "@/context/issuesStore";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
@@ -30,6 +31,9 @@ export type IssueType = {
   childIssues?: IssueType[];
   parentIssue?: IssueType;
   attachment?: AttachmentType;
+  createdBy?: User;
+  updatedAt?: string;
+  createdAt?: string;
 };
 
 function ProjectBoard() {

@@ -34,7 +34,6 @@ export default function ChildIssues({
           `/issues/get-all-child/${currIssue._id}`
         );
         setChildIssues(data.childIssues);
-        console.log(data.childIssues);
       } catch (error) {
         console.error(error);
       }
