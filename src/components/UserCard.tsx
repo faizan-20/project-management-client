@@ -10,16 +10,19 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-const UserCard = ({ firstname, email, role, avatar }: {
+const UserCard = ({ userId, firstname, email, role, avatar, changeRole }: {
+    userId: any,
     firstname: any,
     email: any,
     role: any,
     avatar: any,
+    changeRole: any,
 }) => {
+
 
     return (
         <div>
-            <Card key={1}>
+            <Card key={userId}>
                 <CardHeader className="flex-row gap-4 items-center">
                     {/* AVATAR */}
                     <Avatar>
@@ -40,10 +43,10 @@ const UserCard = ({ firstname, email, role, avatar }: {
                                 <Button variant="outline">Add to project</Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-56">
-                                <DropdownMenuItem>
+                                <DropdownMenuItem  onClick={() => { changeRole('admin', userId) }}>
                                     <span>Admin</span>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => { changeRole('admin', userId) }}>
                                     <span>User</span>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
@@ -59,13 +62,13 @@ const UserCard = ({ firstname, email, role, avatar }: {
                                 <Button variant="outline">Change Role</Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-56">
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => { changeRole('admin', userId) }}>
                                     <span>Admin</span>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => { changeRole('user', userId) }}>
                                     <span>User</span>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => { changeRole('', userId) }}>
                                     <span>Other User</span>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />

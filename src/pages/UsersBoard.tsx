@@ -16,10 +16,9 @@ import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { User } from "@/context/AuthProvider";
 
 
-
 function UserBoard() {
 
-    const { currProject } = useContext(ProjectsContext);
+    const { currProject, setCurrProject } = useContext(ProjectsContext);
     const owner = currProject?.owner;
     const admins = currProject?.admins;
     const users = currProject?.users;
@@ -28,18 +27,35 @@ function UserBoard() {
 
     const axiosPrivate = useAxiosPrivate();
 
-    useEffect(() => {
-        const getAllUsers = async () => {
-            try {
-                const { data } = await axiosPrivate.get(`/projects/get-all-not-project-user/${currProject?._id}`);                
-                setOtherUsers(data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
+    const getAllUsers = async () => {
+        try {
+            const { data } = await axiosPrivate.get(`/projects/get-all-not-project-user/${currProject?._id}`);
+            setOtherUsers(data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
+    useEffect(() => {
         getAllUsers();
-    }, [axiosPrivate]);
+    }, []);
+
+
+
+    const changeRole = async (role: string, userId: string) => {
+        await axiosPrivate.put(`/projects/change-role/${currProject?._id}`, { role, userId });
+        getCurrProject();
+        getAllUsers();
+    }
+
+    const getCurrProject = async () => {
+        try {
+            const { data } = await axiosPrivate.get(`/projects/${currProject?._id}`);
+            setCurrProject(data.project);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     return (
         <div className="flex flex-col px-6 overflow-auto">
@@ -70,7 +86,7 @@ function UserBoard() {
                     // value={issueSearch}
                     // onChange={(e) => setIssueSearch(e.target.value)}
                     id="search-issue"
-                    placeholder="Search"
+                    placeholder="Search project users"
                     className="px-2 text-base border-slate-200 border-2 max-w-60"
                 />
 
@@ -98,10 +114,12 @@ function UserBoard() {
                 {/* --------------------- OWNER ------------------- */}
                 <UserCard
                     key={owner?._id}
+                    userId={owner?._id}
                     firstname={owner?.firstname}
                     email={owner?.email}
                     avatar={owner?.avatar}
                     role={"Owner"}
+                    changeRole={changeRole}
                 />
 
                 {/* --------------------- ADMIN ------------------- */}
@@ -110,10 +128,12 @@ function UserBoard() {
                         return (
                             <UserCard
                                 key={admin?._id}
+                                userId={admin?._id}
                                 firstname={admin?.firstname}
                                 email={admin?.email}
                                 avatar={admin?.avatar}
                                 role={"Admin"}
+                                changeRole={changeRole}
                             />
                         )
                     }
@@ -124,10 +144,12 @@ function UserBoard() {
                     return (
                         <UserCard
                             key={user?._id}
+                            userId={user?._id}
                             firstname={user?.firstname}
                             email={user?.email}
                             avatar={user?.avatar}
                             role={"User"}
+                            changeRole={changeRole}
                         />
                     )
                 })}
@@ -137,6 +159,20 @@ function UserBoard() {
             <div className="font-semibold py-4 text-2xl">
                 Other Users
             </div>
+            {/* SEARCH OTHER USERS */}
+            <div className="flex justify-between">
+                <Input
+                    type="text"
+                    name="search-issue"
+                    // value={issueSearch}
+                    // onChange={(e) => setIssueSearch(e.target.value)}
+                    id="search-issue"
+                    placeholder="Search other users"
+                    className="px-2 text-base border-slate-200 border-2 max-w-60"
+                />
+
+
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-8 my-4">
                 {/* --------------------- OTHER USERS ------------------- */}
@@ -144,14 +180,18 @@ function UserBoard() {
                     return (
                         <UserCard
                             key={user?._id}
+                            userId={user?._id}
                             firstname={user?.firstname}
                             email={user?.email}
                             avatar={user?.avatar}
                             role={""}
+                            changeRole={changeRole}
                         />
                     )
                 })}
             </div>
+
+
         </div>
     )
 }
