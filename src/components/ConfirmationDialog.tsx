@@ -36,7 +36,6 @@ export function ConfirmationDialog({
             No
           </Button>
           <Button
-            type="submit"
             variant="destructive"
             onClick={() => {
               confirmationFunction();

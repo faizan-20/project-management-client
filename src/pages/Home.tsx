@@ -11,7 +11,7 @@ export type ProjectType = {
   title: string;
   description?: string;
   owner: User;
-  admins: string[];
+  admins: User[];
   users: User[];
   updatedby?: User;
   _id: string;
