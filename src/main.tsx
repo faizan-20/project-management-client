@@ -21,6 +21,7 @@ import PersistLogin from "./components/PersistLogin.tsx";
 import Home from "./pages/Home.tsx";
 import UserBoard from "./pages/UsersBoard.tsx";
 import AllIssuesProvider from "./context/AllIssuesProvider.tsx";
+import IssueListPage from "./pages/IssueListPage.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -38,6 +39,10 @@ const router = createBrowserRouter(
                 <Route
                   path="project/:projectId/users"
                   element={<UserBoard />}
+                />
+                <Route
+                  path="project/:projectId/issues"
+                  element={<IssueListPage />}
                 />
               </Route>
             </Route>
