@@ -46,7 +46,7 @@ const UserCard = ({ userId, firstname, email, role, avatar, changeRole }: {
                                 <DropdownMenuItem  onClick={() => { changeRole('admin', userId) }}>
                                     <span>Admin</span>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => { changeRole('admin', userId) }}>
+                                <DropdownMenuItem onClick={() => { changeRole('user', userId) }}>
                                     <span>User</span>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
@@ -69,7 +69,7 @@ const UserCard = ({ userId, firstname, email, role, avatar, changeRole }: {
                                     <span>User</span>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => { changeRole('', userId) }}>
-                                    <span>Other User</span>
+                                    <span>Remove</span>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem>
