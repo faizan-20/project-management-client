@@ -1,6 +1,5 @@
-import Editor from "@/components/Editor";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   Table,
   TableBody,
@@ -8,83 +7,174 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
+import { IssueType } from "./ProjectBoard";
+import { Textarea } from "@/components/ui/textarea";
+import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import { useIssuesStore } from "@/context/issuesStore";
+import ChildIssues from "@/components/ChildIssues";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import IssueComments from "@/components/IssueComments";
+import IssueAttachment from "@/components/IssueAttachment";
+import { ConfirmationDialog } from "@/components/ConfirmationDialog";
+import AttachedFileList from "@/components/AttachedFileList";
+import { ProjectsContext } from "@/context/ProjectsProvider";
+import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 
-
-
-function IssuePage() {
+const IssuePage = ({ issue }: { issue: IssueType }) => {
+  const [currIssue, setCurrIssue] = useState(issue);
   const [showEditor, setShowEditor] = useState(false);
   const [showCommentEditor, setShowCommentEditor] = useState(false);
+  const [description, setDescription] = useState(currIssue.description);
 
-  function handleDescriptionClick() {
-    setShowEditor(true);
+  const [assignee, setAsignee] = useState(currIssue.assignee);
+
+  const [isInputVisible, setIsInputVisible] = useState(false); // set add child issue visibility
+
+  const { currProject } = useContext(ProjectsContext);
+
+  const setIssueStatus = useIssuesStore((state) => state.setIssueStatus);
+  const setIssueDescription = useIssuesStore(
+    (state) => state.setIssueDescription
+  );
+  const removeIssue = useIssuesStore((state) => state.removeIssue);
+
+  const axiosPrivate = useAxiosPrivate();
+
+  async function handleStatusChange(e: Event, status: string) {
+    e.preventDefault();
+    try {
+      await axiosPrivate.post(`/issues/update-status/${currIssue._id}`, {
+        status,
+      });
+      setIssueStatus(currIssue._id, status);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
-  function handleCommentClick() {
-    setShowCommentEditor(true);
+  async function handleDescription() {
+    try {
+      await axiosPrivate.put(`/issues/update-issue/${currIssue._id}`, {
+        description,
+      });
+
+      setCurrIssue({ ...currIssue, description });
+      setIssueDescription(currIssue._id, description || "");
+      setShowEditor(false);
+    } catch (error) {
+      console.error(error);
+    }
   }
+
+  const deleteIssue = async (issueId: string) => {
+    try {
+      await axiosPrivate.delete(`/issues/${issueId}`);
+      removeIssue(currIssue._id);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const addAssignee = async (assigneeId: string) => {
+    try {
+      const { data } = await axiosPrivate.put(
+        `/issues/update-issue/${currIssue._id}`,
+        {
+          assignee: assigneeId,
+        }
+      );
+      console.log(data);
+      setCurrIssue({ ...currIssue, assignee });
+      setAsignee(data.assignee);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div className="flex p-5">
-      <div className="w-1/2">
-        <div className="font-semibold text-2xl pb-2">Issue Name</div>
-        <div className="flex pb-5">
-          <div className="pr-2">
-            <Button variant="secondary">
+      <div className="w-[40vw]">
+        <Breadcrumb>
+          <BreadcrumbList>
+            {currIssue.parentIssue ? (
+              <BreadcrumbItem>
+                <BreadcrumbLink
+                  onClick={() =>
+                    setCurrIssue(currIssue.parentIssue || currIssue)
+                  }
+                  className="cursor-pointer"
+                >
+                  {currIssue.parentIssue.key}
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            ) : (
+              <BreadcrumbItem>
+                <BreadcrumbLink>Add parent</BreadcrumbLink>
+              </BreadcrumbItem>
+            )}
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink>{currIssue.key}</BreadcrumbLink>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <div className="flex justify-between">
+          <div className="font-semibold text-2xl mb-2 mt-2">
+            {currIssue.title}
+          </div>
+          <ConfirmationDialog
+            confirmationFunction={() => deleteIssue(currIssue._id)}
+            title={`Delete this issue forever?`}
+            description="This action is permanent and connot be undone"
+          >
+            <Button
+              variant="ghost"
+              size="icon"
+              id="deleteIssue"
+              className="hover:text-red-700"
+            >
               <svg
-                viewBox="0 0 28 28"
-                className="w-5 h-5"
-                version="1.1"
                 xmlns="http://www.w3.org/2000/svg"
-                fill="#000000"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-4 h-4"
               >
-                <g id="SVGRepo_bgCarrier" strokeWidth="2"></g>
-                <g
-                  id="SVGRepo_tracerCarrier"
+                <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                ></g>
-                <g id="SVGRepo_iconCarrier">
-                  {" "}
-                  <title>attachment-2</title>
-                  <g
-                    id="Page-1"
-                    strokeWidth="2"
-                    fill="none"
-                    fillRule="evenodd"
-                  >
-                    <g
-                      id="Icon-Set"
-                      transform="translate(-258.000000, -154.000000)"
-                      fill="#000000"
-                    >
-                      <path
-                        d="M284.562,164.181 L270.325,178.26 C267.966,180.593 264.141,180.593 261.782,178.26 C259.423,175.928 259.423,172.146 261.782,169.813 L274.596,157.141 C276.168,155.586 278.718,155.586 280.291,157.141 C281.863,158.696 281.863,161.218 280.291,162.772 L267.477,175.444 C266.691,176.222 265.416,176.222 264.629,175.444 C263.843,174.667 263.843,173.406 264.629,172.628 L276.02,161.365 L274.596,159.957 L263.206,171.221 C261.633,172.775 261.633,175.297 263.206,176.853 C264.778,178.407 267.328,178.407 268.901,176.852 L281.714,164.181 C284.073,161.849 284.074,158.065 281.715,155.733 C279.355,153.4 275.531,153.4 273.172,155.733 L259.646,169.108 L259.696,169.157 C257.238,172.281 257.455,176.797 260.358,179.668 C263.262,182.539 267.828,182.754 270.987,180.323 L271.036,180.372 L285.986,165.589 L284.562,164.181"
-                        id="attachment-2"
-                      >
-                        {" "}
-                      </path>
-                    </g>{" "}
-                  </g>{" "}
-                </g>
+                  d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                />
               </svg>
-              Attach
             </Button>
-          </div>
+          </ConfirmationDialog>
+        </div>
+        <div className="flex mb-2">
+          <IssueAttachment currIssue={currIssue} />
           <div className="pr-2">
-            <Button variant="secondary">Add a Child Issue</Button>
+            <Button variant="secondary" onClick={() => setIsInputVisible(true)}>
+              Add a Child Issue
+            </Button>
           </div>
           <div>
             <Button variant="secondary">
               <svg
                 viewBox="0 0 24 24"
-                className="w-7 h-7"
+                className="w-7 h-7 mr-1"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
@@ -107,14 +197,17 @@ function IssuePage() {
             </Button>
           </div>
         </div>
-
-        <div className="pb-9">
-          <div className="font-semibold text-gray-700 pb-2">Description</div>
+        <AttachedFileList currIssue={currIssue} />
+        <div className="mb-9">
+          <div className="font-semibold text-sm">Description</div>
           {showEditor ? (
-            <div>
-              <Editor />
+            <div className="mt-2 mr-2">
+              <Textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
               <div className="flex gap-2 mt-2">
-                <Button>Save</Button>
+                <Button onClick={handleDescription}>Save</Button>
                 <Button
                   variant="secondary"
                   onClick={() => setShowEditor(false)}
@@ -123,83 +216,76 @@ function IssuePage() {
                 </Button>
               </div>
             </div>
+          ) : currIssue.description?.length ? (
+            <div
+              className="text-sm text-gray-700 mb-2 mt-1 cursor-text h-fit whitespace-pre-wrap"
+              onClick={() => setShowEditor(true)}
+            >
+              {currIssue.description}
+            </div>
           ) : (
             <div
-              className="text-gray-500 text-sm"
-              onClick={handleDescriptionClick}
+              className="text-gray-500 text-sm cursor-text"
+              onClick={() => setShowEditor(true)}
             >
               Add a description...
             </div>
           )}
         </div>
-
         <div>
-          <div className="font-semibold text-gray-700 pb-3">Activity</div>
-          {showCommentEditor ? (
-            <div>
-              <Editor />
-
-              <div className="flex gap-2 mt-2">
-                <Button>Save</Button>
-                <Button
-                  variant="secondary"
-                  onClick={() => setShowCommentEditor(false)}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <div className="text-gray-500 text-sm" onClick={handleCommentClick}>
-              Add a comment...
-            </div>
-          )}
+          <ChildIssues
+            currIssue={currIssue}
+            isInputVisible={isInputVisible}
+            setIsInputVisible={setIsInputVisible}
+            setCurrIssue={setCurrIssue}
+          />
         </div>
+        <IssueComments
+          showCommentEditor={showCommentEditor}
+          setShowCommentEditor={setShowCommentEditor}
+          currIssue={currIssue}
+        />
       </div>
 
       <div className="w-1/2">
-        <div>
+        <div className="ml-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="secondary">Status</Button>
+              <Button variant="secondary">
+                <div className="font-bold">
+                  {currIssue.status.toUpperCase()}
+                </div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className="w-5 h-5 font-bold ml-1"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem>To Do</DropdownMenuItem>
-              <DropdownMenuItem>Progress</DropdownMenuItem>
-              <DropdownMenuItem>Done</DropdownMenuItem>
+            <DropdownMenuContent className="font-semibold">
+              <DropdownMenuItem onSelect={(e) => handleStatusChange(e, "todo")}>
+                To Do
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onSelect={(e) => handleStatusChange(e, "inprogress")}
+              >
+                <div className="bg-sky-200">In Progress</div>
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={(e) => handleStatusChange(e, "done")}>
+                <div className="bg-green-200">Done</div>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-
-          {/* <Button className="bg-slate-200 text-black">
-            To Do
-            <svg
-              viewBox="0 0 24 24"
-              className="w-4 h-4"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-              <g
-                id="SVGRepo_tracerCarrier"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              ></g>
-              <g id="SVGRepo_iconCarrier">
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M12.7071 14.7071C12.3166 15.0976 11.6834 15.0976 11.2929 14.7071L6.29289 9.70711C5.90237 9.31658 5.90237 8.68342 6.29289 8.29289C6.68342 7.90237 7.31658 7.90237 7.70711 8.29289L12 12.5858L16.2929 8.29289C16.6834 7.90237 17.3166 7.90237 17.7071 8.29289C18.0976 8.68342 18.0976 9.31658 17.7071 9.70711L12.7071 14.7071Z"
-                  fill="#000000"
-                ></path>
-              </g>
-            </svg>
-          </Button>
-                <path fillRule="evenodd" clipRule="evenodd" d="M12.7071 14.7071C12.3166 15.0976 11.6834 15.0976 11.2929 14.7071L6.29289 9.70711C5.90237 9.31658 5.90237 8.68342 6.29289 8.29289C6.68342 7.90237 7.31658 7.90237 7.70711 8.29289L12 12.5858L16.2929 8.29289C16.6834 7.90237 17.3166 7.90237 17.7071 8.29289C18.0976 8.68342 18.0976 9.31658 17.7071 9.70711L12.7071 14.7071Z" fill="#000000"></path>
-            </g></svg>
-          </Button> */}
         </div>
 
-        <div className="w-full mt-3">
+        <div className="w-full mt-3 ml-4">
           <Table>
             <TableHeader>
               <TableRow>
@@ -210,31 +296,82 @@ function IssuePage() {
             <TableBody>
               <TableRow>
                 <TableCell className=" text-gray-600">Assignee</TableCell>
-                <TableCell className=" text-gray-600">Unassigned</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className=" text-gray-600">Labels</TableCell>
-                <TableCell className=" text-gray-600">Unassigned</TableCell>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    {assignee ? (
+                      <TableCell className="text-blue-600/80 cursor-pointer">
+                        {assignee.firstname}
+                      </TableCell>
+                    ) : (
+                      <TableCell className="text-blue-600/80 cursor-pointer">
+                        Unassigned
+                      </TableCell>
+                    )}
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem
+                      onClick={() => addAssignee(currProject?.owner._id || "")}
+                    >
+                      <div className="flex gap-3 items-center">
+                        <Avatar>
+                          <AvatarImage
+                            className="rounded-full w-7 h-7"
+                            src={`${currProject?.owner.avatar}`}
+                          />
+                        </Avatar>
+                        <div>{currProject?.owner.firstname}</div>
+                      </div>
+                    </DropdownMenuItem>
+                    {currProject?.users.map((user) => (
+                      <DropdownMenuItem
+                        key={user._id}
+                        onSelect={() => addAssignee(user._id)}
+                      >
+                        <div className="flex gap-3 items-center">
+                          <Avatar>
+                            <AvatarImage
+                              className="rounded-full w-7 h-7"
+                              src={`${user.avatar}`}
+                            />
+                          </Avatar>
+                          <div>{user.firstname}</div>
+                        </div>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </TableRow>
               <TableRow>
                 <TableCell className=" text-gray-600">Parent</TableCell>
-                <TableCell className=" text-gray-600">Unassigned</TableCell>
+                {currIssue.parentIssue ? (
+                  <TableCell className=" text-gray-600">
+                    {currIssue.parentIssue.title}
+                  </TableCell>
+                ) : (
+                  <TableCell className=" text-gray-600">Unassigned</TableCell>
+                )}
               </TableRow>
               <TableRow>
                 <TableCell className=" text-gray-600">Reporter</TableCell>
-                <TableCell className=" text-gray-600">Unassigned</TableCell>
+                <TableCell className=" text-gray-600">
+                  {currIssue.createdBy?.firstname}
+                </TableCell>
               </TableRow>
             </TableBody>
           </Table>
         </div>
 
         <div className="mt-4 pl-3">
-          <div className=" text-gray-400 text-xs">Updated At</div>
-          <div className="text-gray-400 text-xs">Created At</div>
+          <div className=" text-gray-400 text-xs">
+            Updated At: {currIssue.updatedAt}
+          </div>
+          <div className="text-gray-400 text-xs">
+            Created At: {currIssue.updatedAt}
+          </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default IssuePage;
