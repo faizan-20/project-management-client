@@ -34,6 +34,7 @@ export type IssueType = {
   createdBy?: User;
   updatedAt?: string;
   createdAt?: string;
+  assignee?: User;
 };
 
 function ProjectBoard() {

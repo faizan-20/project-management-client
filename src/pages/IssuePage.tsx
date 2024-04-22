@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   Table,
   TableBody,
@@ -30,6 +30,8 @@ import IssueComments from "@/components/IssueComments";
 import IssueAttachment from "@/components/IssueAttachment";
 import { ConfirmationDialog } from "@/components/ConfirmationDialog";
 import AttachedFileList from "@/components/AttachedFileList";
+import { ProjectsContext } from "@/context/ProjectsProvider";
+import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 
 const IssuePage = ({ issue }: { issue: IssueType }) => {
   const [currIssue, setCurrIssue] = useState(issue);
@@ -37,7 +39,11 @@ const IssuePage = ({ issue }: { issue: IssueType }) => {
   const [showCommentEditor, setShowCommentEditor] = useState(false);
   const [description, setDescription] = useState(currIssue.description);
 
+  const [assignee, setAsignee] = useState(currIssue.assignee);
+
   const [isInputVisible, setIsInputVisible] = useState(false); // set add child issue visibility
+
+  const { currProject } = useContext(ProjectsContext);
 
   const setIssueStatus = useIssuesStore((state) => state.setIssueStatus);
   const setIssueDescription = useIssuesStore(
@@ -77,6 +83,22 @@ const IssuePage = ({ issue }: { issue: IssueType }) => {
     try {
       await axiosPrivate.delete(`/issues/${issueId}`);
       removeIssue(currIssue._id);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const addAssignee = async (assigneeId: string) => {
+    try {
+      const { data } = await axiosPrivate.put(
+        `/issues/update-issue/${currIssue._id}`,
+        {
+          assignee: assigneeId,
+        }
+      );
+      console.log(data);
+      setCurrIssue({ ...currIssue, assignee });
+      setAsignee(data.assignee);
     } catch (error) {
       console.error(error);
     }
@@ -203,7 +225,7 @@ const IssuePage = ({ issue }: { issue: IssueType }) => {
             </div>
           ) : (
             <div
-              className="text-gray-500 text-sm"
+              className="text-gray-500 text-sm cursor-text"
               onClick={() => setShowEditor(true)}
             >
               Add a description...
@@ -274,7 +296,50 @@ const IssuePage = ({ issue }: { issue: IssueType }) => {
             <TableBody>
               <TableRow>
                 <TableCell className=" text-gray-600">Assignee</TableCell>
-                <TableCell className=" text-gray-600">Unassigned</TableCell>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    {assignee ? (
+                      <TableCell className="text-blue-600/80 cursor-pointer">
+                        {assignee.firstname}
+                      </TableCell>
+                    ) : (
+                      <TableCell className="text-blue-600/80 cursor-pointer">
+                        Unassigned
+                      </TableCell>
+                    )}
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem
+                      onClick={() => addAssignee(currProject?.owner._id || "")}
+                    >
+                      <div className="flex gap-3 items-center">
+                        <Avatar>
+                          <AvatarImage
+                            className="rounded-full w-7 h-7"
+                            src={`${currProject?.owner.avatar}`}
+                          />
+                        </Avatar>
+                        <div>{currProject?.owner.firstname}</div>
+                      </div>
+                    </DropdownMenuItem>
+                    {currProject?.users.map((user) => (
+                      <DropdownMenuItem
+                        key={user._id}
+                        onSelect={() => addAssignee(user._id)}
+                      >
+                        <div className="flex gap-3 items-center">
+                          <Avatar>
+                            <AvatarImage
+                              className="rounded-full w-7 h-7"
+                              src={`${user.avatar}`}
+                            />
+                          </Avatar>
+                          <div>{user.firstname}</div>
+                        </div>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </TableRow>
               <TableRow>
                 <TableCell className=" text-gray-600">Parent</TableCell>
