@@ -36,10 +36,6 @@ const router = createBrowserRouter(
                   element={<ProjectBoard />}
                 />
                 <Route
-                  path="project/:projectId/timeline"
-                  element={<div>Timeline</div>}
-                />
-                <Route
                   path="project/:projectId/users"
                   element={<UserBoard />}
                 />
