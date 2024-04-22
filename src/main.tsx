@@ -37,12 +37,12 @@ const router = createBrowserRouter(
                   element={<ProjectBoard />}
                 />
                 <Route
-                  path="project/:projectId/users"
-                  element={<UserBoard />}
-                />
-                <Route
                   path="project/:projectId/issues"
                   element={<IssueListPage />}
+                />
+                <Route
+                  path="project/:projectId/users"
+                  element={<UserBoard />}
                 />
               </Route>
             </Route>

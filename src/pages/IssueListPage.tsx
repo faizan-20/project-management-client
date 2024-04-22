@@ -1,5 +1,5 @@
 import IssueCard from "@/components/IssueCard";
-import { useIssuesStore } from "@/context/store";
+import { useIssuesStore } from "@/context/issuesStore";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,17 +16,16 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
 
 function IssueListPage() {
   const { projectId } = useParams<{ projectId: string }>();
   const issues = useIssuesStore((state) => state.issues);
   const [currProject, setCurrProject] = useState<ProjectType>();
 
-   useEffect(() => {
+  useEffect(() => {
     const getCurrProject = async () => {
       try {
         const { data } = await axiosPrivate.get(`/projects/${projectId}`);
@@ -65,19 +64,14 @@ function IssueListPage() {
 
       <div className="mb-4 flex gap-2">
         <div className="max-w-56">
-          <Input
-            type="text"
-            placeholder="Search Issues"
-          />
+          <Input type="text" placeholder="Search Issues" />
         </div>
-        
+
         <div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="secondary">
-                <div className="font-bold">
-                  Project : {currProject?.title}
-                </div>
+                <div className="font-bold">Project : {currProject?.title}</div>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
@@ -94,7 +88,7 @@ function IssueListPage() {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="font-semibold">
               <DropdownMenuItem>
-                <input type="checkbox" className="mr-2"/> {currProject?.title}
+                <input type="checkbox" className="mr-2" /> {currProject?.title}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -104,9 +98,7 @@ function IssueListPage() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="secondary">
-                <div className="font-bold">
-                  Type
-                </div>
+                <div className="font-bold">Type</div>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
@@ -123,13 +115,13 @@ function IssueListPage() {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="font-semibold">
               <DropdownMenuItem>
-                <input type="checkbox" className="mr-2"/> Epic
+                <input type="checkbox" className="mr-2" /> Epic
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <input type="checkbox" className="mr-2"/> Task
+                <input type="checkbox" className="mr-2" /> Task
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <input type="checkbox" className="mr-2"/> Subtask
+                <input type="checkbox" className="mr-2" /> Subtask
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -139,9 +131,7 @@ function IssueListPage() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="secondary">
-                <div className="font-bold">
-                  Status
-                </div>
+                <div className="font-bold">Status</div>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
@@ -158,19 +148,15 @@ function IssueListPage() {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="font-semibold">
               <DropdownMenuItem>
-                <input type="checkbox" className="mr-2"/> To Do
+                <input type="checkbox" className="mr-2" /> To Do
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <input type="checkbox" className="mr-2"/>
-                <div className="bg-sky-200">
-                 In Progress
-                </div>
+                <input type="checkbox" className="mr-2" />
+                <div className="bg-sky-200">In Progress</div>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <input type="checkbox" className="mr-2"/>
-                <div className="bg-green-200">
-                  Done
-                </div>
+                <input type="checkbox" className="mr-2" />
+                <div className="bg-green-200">Done</div>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -180,9 +166,7 @@ function IssueListPage() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="secondary">
-                <div className="font-bold">
-                  Assignee
-                </div>
+                <div className="font-bold">Assignee</div>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
@@ -199,25 +183,25 @@ function IssueListPage() {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="font-semibold">
               <DropdownMenuItem>
-                <input type="checkbox" className="mr-2"/> Assignee1
+                <input type="checkbox" className="mr-2" /> Assignee1
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <input type="checkbox" className="mr-2"/> Assignee2
+                <input type="checkbox" className="mr-2" /> Assignee2
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </div>
-      
+
       <div className="flex border-2 w-72 h-[70vh] overflow-auto py-5 bg-slate-200">
         <div className="flex flex-col w-72">
-          {issues.map((issue) => 
-          <IssueCard key={issue._id} issue={issue} />
-          )}
+          {issues.map((issue) => (
+            <IssueCard key={issue._id} issue={issue} />
+          ))}
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default IssueListPage
+export default IssueListPage;
