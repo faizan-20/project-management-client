@@ -309,35 +309,24 @@ const IssuePage = ({ issue }: { issue: IssueType }) => {
                     )}
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
-                    <DropdownMenuItem
-                      onClick={() => addAssignee(currProject?.owner._id || "")}
-                    >
-                      <div className="flex gap-3 items-center">
-                        <Avatar>
-                          <AvatarImage
-                            className="rounded-full w-7 h-7"
-                            src={`${currProject?.owner.avatar}`}
-                          />
-                        </Avatar>
-                        <div>{currProject?.owner.firstname}</div>
-                      </div>
-                    </DropdownMenuItem>
-                    {currProject?.users.map((user) => (
-                      <DropdownMenuItem
-                        key={user._id}
-                        onSelect={() => addAssignee(user._id)}
-                      >
-                        <div className="flex gap-3 items-center">
-                          <Avatar>
-                            <AvatarImage
-                              className="rounded-full w-7 h-7"
-                              src={`${user.avatar}`}
-                            />
-                          </Avatar>
-                          <div>{user.firstname}</div>
-                        </div>
-                      </DropdownMenuItem>
-                    ))}
+                    {currProject?.users
+                      .concat(currProject.admins)
+                      .map((user) => (
+                        <DropdownMenuItem
+                          key={user._id}
+                          onSelect={() => addAssignee(user._id)}
+                        >
+                          <div className="flex gap-3 items-center">
+                            <Avatar>
+                              <AvatarImage
+                                className="rounded-full w-7 h-7"
+                                src={`${user.avatar}`}
+                              />
+                            </Avatar>
+                            <div>{user.firstname}</div>
+                          </div>
+                        </DropdownMenuItem>
+                      ))}
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableRow>
