@@ -1,30 +1,22 @@
-# React + TypeScript + Vite
+# Project Management Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a web based project management tool aimed to provide open source alternative to commercial project management tools like jira. This provide project creation/deletion, management throught issues and role based access control throughout the project.
 
-Currently, two official plugins are available:
+## Developer Documentation
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+1. Clone the repository
+   ```
+   git clone https://github.com/faizan-20/project-management-client/
+   ```
+2. cd into cloned repository
+   ```
+   cd project-management-tool
+   ```
+3. Install the dependencies
+   ```
+   npm install
+   ```
+4. Start the development server on `http://localhost:5173/`
+   ```
+   npm run dev
+   ```
