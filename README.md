@@ -2,7 +2,7 @@
 
 This is a web based project management tool aimed to provide an open source alternative to commercial project management tools like jira. This provides project creation/deletion, management through issues and role based access control throughout the project.
 
-## Developer Documentation
+## Developer Documentation for client
 
 1. Clone the repository
    ```
@@ -20,3 +20,4 @@ This is a web based project management tool aimed to provide an open source alte
    ```
    npm run dev
    ```
+5. Go to the [Project Management Server](https://github.com/Ayush8085/project-management-server) repository for setting up the server.
