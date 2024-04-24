@@ -3,8 +3,6 @@ import {
   DrawerClose,
   DrawerContent,
   DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
   DrawerTrigger,
 } from "./ui/drawer";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
@@ -39,11 +37,11 @@ export default function ProfileDrawer({
       <DrawerTrigger asChild>{children}</DrawerTrigger>
       <DrawerContent>
         <div className="mx-auto w-full max-w-sm">
-          <DrawerHeader>
+          <div className="flex justify-evenly items-center flex-1 ">
             {/* ADD AVATAR HERE */}
             <Avatar>
               <AvatarImage
-                className="rounded-full"
+                className="rounded-full w-24 h-auto"
                 src={user?.avatar}
                 alt={`${user?.firstname}'s Avatar`}
               />
@@ -54,13 +52,19 @@ export default function ProfileDrawer({
               </AvatarFallback>
             </Avatar>
 
-            <DrawerTitle>
-              Name: <span className="font-normal"> {user?.firstname}</span>
-            </DrawerTitle>
-            <DrawerTitle>
-              Email: <span className="font-normal"> {user?.email}</span>
-            </DrawerTitle>
-          </DrawerHeader>
+            <div className="text-lg">
+              <div className="font-bold">
+                Name:{" "}
+                <span className="font-normal">
+                  {" "}
+                  {user?.firstname} {user?.lastname}
+                </span>
+              </div>
+              <div className="font-bold">
+                Email: <span className="font-normal"> {user?.email}</span>
+              </div>
+            </div>
+          </div>
 
           <DrawerFooter>
             <Button variant="secondary">Edit</Button>

@@ -15,20 +15,15 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { User } from "@/context/AuthProvider";
 
 const UserCard = ({
-  userId,
-  firstname,
-  email,
   role,
-  avatar,
+  user,
   changeRole,
 }: {
-  userId: string | undefined;
-  firstname: string | undefined;
-  email: string | undefined;
   role: string | undefined;
-  avatar: string | undefined;
+  user: User | undefined;
   changeRole: (
     role: string,
     userId: string | undefined
@@ -43,16 +38,18 @@ const UserCard = ({
 }) => {
   return (
     <div>
-      <Card key={userId}>
+      <Card key={user?._id}>
         <CardHeader className="flex-row gap-4 items-center">
           {/* AVATAR */}
           <Avatar>
-            <AvatarImage src={avatar} alt="user img" />
+            <AvatarImage src={user?.avatar} alt="user img" />
             <AvatarFallback>"pic"</AvatarFallback>
           </Avatar>
           <div>
-            <CardTitle>{firstname}</CardTitle>
-            <CardDescription>{email}</CardDescription>
+            <CardTitle>
+              {user?.firstname} {user?.lastname}
+            </CardTitle>
+            <CardDescription>{user?.email}</CardDescription>
           </div>
         </CardHeader>
         <CardFooter className="flex justify-between">
@@ -64,14 +61,14 @@ const UserCard = ({
               <DropdownMenuContent className="w-56">
                 <DropdownMenuItem
                   onClick={() => {
-                    changeRole("admin", userId);
+                    changeRole("admin", user?._id);
                   }}
                 >
                   <span>Admin</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => {
-                    changeRole("admin", userId);
+                    changeRole("admin", user?._id);
                   }}
                 >
                   <span>User</span>
@@ -91,21 +88,21 @@ const UserCard = ({
               <DropdownMenuContent className="w-56">
                 <DropdownMenuItem
                   onClick={() => {
-                    changeRole("admin", userId);
+                    changeRole("admin", user?._id);
                   }}
                 >
                   <span>Admin</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => {
-                    changeRole("user", userId);
+                    changeRole("user", user?._id);
                   }}
                 >
                   <span>User</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => {
-                    changeRole("", userId);
+                    changeRole("", user?._id);
                   }}
                 >
                   <span>Remove</span>

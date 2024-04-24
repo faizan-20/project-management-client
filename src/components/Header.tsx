@@ -2,16 +2,22 @@ import { AuthContext } from "@/context/AuthProvider";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useContext, useState } from "react";
 import ProfileDrawer from "./ProfileDrawer";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
   const { user } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
 
+  const navigate = useNavigate();
+
   return (
     <div className="">
       <div className="flex justify-between items-center px-6 h-12 border-b-2 border-slate-200">
         <div className="flex gap-4 items-center">
-          <div className="flex mr-6 gap-2 items-center hover:cursor-pointer hover:bg-slate-300 px-2 py-1 transition-all rounded-sm select-none">
+          <div
+            className="flex mr-6 gap-2 items-center hover:cursor-pointer hover:bg-slate-300 px-2 py-1 transition-all rounded-sm select-none"
+            onClick={() => navigate("/")}
+          >
             <div>
               <svg
                 xmlns="http://www.w3.org/2000/svg"

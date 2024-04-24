@@ -125,10 +125,7 @@ function UserBoard() {
         {/* --------------------- OWNER ------------------- */}
         <UserCard
           key={owner?._id}
-          userId={owner?._id}
-          firstname={owner?.firstname}
-          email={owner?.email}
-          avatar={owner?.avatar}
+          user={owner}
           role={"Owner"}
           changeRole={changeRole}
         />
@@ -150,10 +147,7 @@ function UserBoard() {
               return (
                 <UserCard
                   key={admin?._id}
-                  userId={admin?._id}
-                  firstname={admin?.firstname}
-                  email={admin?.email}
-                  avatar={admin?.avatar}
+                  user={admin}
                   role={"Admin"}
                   changeRole={changeRole}
                 />
@@ -177,10 +171,7 @@ function UserBoard() {
             return (
               <UserCard
                 key={user?._id}
-                userId={user?._id}
-                firstname={user?.firstname}
-                email={user?.email}
-                avatar={user?.avatar}
+                user={user}
                 role={"User"}
                 changeRole={changeRole}
               />
@@ -221,10 +212,7 @@ function UserBoard() {
               return (
                 <UserCard
                   key={user?._id}
-                  userId={user?._id}
-                  firstname={user?.firstname}
-                  email={user?.email}
-                  avatar={user?.avatar}
+                  user={user}
                   role={""}
                   changeRole={changeRole}
                 />
