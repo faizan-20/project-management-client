@@ -43,7 +43,10 @@ const UserCard = ({
           {/* AVATAR */}
           <Avatar>
             <AvatarImage src={user?.avatar} alt="user img" />
-            <AvatarFallback>"pic"</AvatarFallback>
+            <AvatarFallback>
+              {user?.firstname[0].toUpperCase()}
+              {user?.lastname ? user.lastname[0].toUpperCase() : ""}
+            </AvatarFallback>
           </Avatar>
           <div>
             <CardTitle>
