@@ -60,6 +60,7 @@ const IssuePage = ({ issue }: { issue: IssueType }) => {
         status,
       });
       setIssueStatus(currIssue._id, status);
+      setCurrIssue({ ...currIssue, status });
     } catch (error) {
       console.error(error);
     }

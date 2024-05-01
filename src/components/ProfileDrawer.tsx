@@ -41,13 +41,13 @@ export default function ProfileDrawer({
             {/* ADD AVATAR HERE */}
             <Avatar>
               <AvatarImage
-                className="rounded-full w-24 h-auto"
+                className="rounded-full w-32 h-auto"
                 src={user?.avatar}
                 alt={`${user?.firstname}'s Avatar`}
               />
               <AvatarFallback className="rounded-full">
                 {user?.firstname && user.firstname.length > 0
-                  ? user.firstname[0].toLowerCase()
+                  ? user.firstname[0].toUpperCase()
                   : ""}
               </AvatarFallback>
             </Avatar>
