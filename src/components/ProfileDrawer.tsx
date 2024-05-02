@@ -25,7 +25,13 @@ export default function ProfileDrawer({
     try {
       await axiosPrivate.get("/users/logout");
       localStorage.removeItem("accessToken");
-      setUser(null);
+      setUser({
+        _id: "",
+        email: "",
+        avatar: "",
+        firstname: "",
+        accessToken: "",
+      });
       navigate("/login");
     } catch (error) {
       console.error(error);
