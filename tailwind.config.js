@@ -18,8 +18,8 @@ module.exports = {
     },
     extend: {
       backgroundImage: {
-        "hero-image": "url(./assets/abstract-minimal.jpeg)",
-        "hero-image2": "url(./assets/abstract-minimal-2.png)",
+        "hero-image": "url(./public/abstract-minimal.jpeg)",
+        "hero-image2": "url(./public/abstract-minimal-2.png)",
       },
       colors: {
         hero: "#ffffff",
